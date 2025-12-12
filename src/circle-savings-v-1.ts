@@ -21,7 +21,7 @@ export function handleCircleCreated(event: CircleCreatedEvent): void {
     const transaction = createTransaction(event);
     const user = getOrCreateUser(event.params.creator);
 
-    // Create the immutable event record
+    // Create the immutable event record (NO currentRound)
     const circleCreated = new CircleCreated(event.transaction.hash);
     circleCreated.user = user.id;
     circleCreated.circleId = event.params.circleId;
@@ -46,11 +46,12 @@ export function handleCircleCreated(event: CircleCreatedEvent): void {
     circle.collateralAmount = event.params.collateralLocked;
     circle.frequency = event.params.frequency;
     circle.maxMembers = event.params.maxMembers;
-    circle.currentMembers = BigInt.fromI32(1); // Circle starts with just the creator
+    circle.currentMembers = BigInt.fromI32(1);
+    circle.currentRound = BigInt.fromI32(0);
     circle.visibility = event.params.visibility;
-    circle.state = 0; // 0 = Pending (initial state)
+    circle.state = 0;
     circle.createdAt = event.params.createdAt;
-    circle.startedAt = BigInt.fromI32(0); // Not started yet
+    circle.startedAt = BigInt.fromI32(0);
     circle.updatedAt = event.block.timestamp;
 
     circleCreated.save();
@@ -64,6 +65,7 @@ export function handleCircleJoined(event: CircleJoinedEvent): void {
     // Create the immutable join event record
     const circleJoined = new CircleJoined(event.transaction.hash);
     circleJoined.circleId = event.params.circleId;
+    
     circleJoined.user = user.id
     circleJoined.currentMembers = event.params.currentMembers;
     circleJoined.circleState = event.params.state;
@@ -96,6 +98,7 @@ export function handleCircleStarted(event: CircleStartedEvent): void {
     const circle = Circle.load(circleId);
     if (circle) {
         circle.state = event.params.state; // 1 = Active
+        circle.currentRound = BigInt.fromI32(1); //  First round starts
         circle.startedAt = event.params.startedAt;
         circle.updatedAt = event.block.timestamp;
         circle.save();
@@ -114,6 +117,16 @@ export function handlePayoutDistributed(event: PayoutDistributedEvent): void {
     payoutDistributed.round = event.params.round;
     payoutDistributed.payoutAmount = event.params.amount
     payoutDistributed.transaction = transaction.id;
+
+    // Increment the circle's currentRound
+    const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
+    const circle = Circle.load(circleId);
+    if (circle) {
+        // The contract increments round after payout, so currentRound = payout round + 1
+        circle.currentRound = event.params.round.plus(BigInt.fromI32(1));
+        circle.updatedAt = event.block.timestamp;
+        circle.save();
+    }
 
     payoutDistributed.save();
 }

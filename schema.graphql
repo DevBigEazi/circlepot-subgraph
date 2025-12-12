@@ -146,6 +146,7 @@ type Circle @entity(immutable: false) {
   creator: User!
   circleName: String! # string
   circleDescription: String! # string
+  currentRound: BigInt! # uint256
   contributionAmount: BigInt! # uint256
   collateralAmount: BigInt! # uint256
   frequency: Int!
