@@ -217,7 +217,7 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "amt",
+        "name": "amount",
         "type": "uint256"
       }
     ],
@@ -297,6 +297,31 @@
       }
     ],
     "name": "ContributionMade",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "circleId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "creator",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "DeadCircleFeeDeducted",
     "type": "event"
   },
   {
@@ -499,7 +524,7 @@
       {
         "indexed": false,
         "internalType": "enum CircleSavingsV1.Visibility",
-        "name": "newVisibilty",
+        "name": "newVisibility",
         "type": "uint8"
       }
     ],
@@ -589,6 +614,20 @@
   },
   {
     "inputs": [],
+    "name": "FIXED_FEE_AMOUNT",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "FIXED_FEE_THRESHOLD",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "LATE_FEE_BPS",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
@@ -625,6 +664,20 @@
   {
     "inputs": [],
     "name": "PLATFORM_FEE_BPS",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PRIVATE_CIRCLE_DEAD_FEE",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PUBLIC_CIRCLE_DEAD_FEE",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
@@ -900,6 +953,13 @@
     "name": "executeVote",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "fixedFeeThreshold",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1259,6 +1319,15 @@
       }
     ],
     "name": "updateCircleVisibility",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_newThreshold", "type": "uint256" }
+    ],
+    "name": "updateFeeThreshold",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

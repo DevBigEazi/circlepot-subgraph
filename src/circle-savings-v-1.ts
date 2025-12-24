@@ -14,8 +14,9 @@ import {
     ContributionMade as ContributionMadeEvent,
     MemberForfeited as MemberForfeitedEvent,
     CollateralReturned as CollateralReturnedEvent,
+    DeadCircleFeeDeducted as DeadCircleFeeDeductedEvent,
 } from "../generated/CircleSavingsProxy/CircleSavingsV1"
-import { Circle, CircleCreated, CircleJoined, CircleStarted, CollateralReturned, CollateralWithdrawn, ContributionMade, MemberForfeited, MemberInvited, PayoutDistributed, PositionAssigned, VisibilityUpdated, VoteCast, VoteExecuted, VotingInitiated } from "../generated/schema";
+import { Circle, CircleCreated, CircleJoined, CircleStarted, CollateralReturned, CollateralWithdrawn, ContributionMade, DeadCircleFeeDeducted, MemberForfeited, MemberInvited, PayoutDistributed, PositionAssigned, VisibilityUpdated, VoteCast, VoteExecuted, VotingInitiated } from "../generated/schema";
 import { createTransaction, getOrCreateUser } from "./utils"
 
 export function handleCircleCreated(event: CircleCreatedEvent): void {
@@ -259,7 +260,7 @@ export function handleVisibilityUpdated(event: VisibilityUpdatedEvent): void {
     const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
     const circle = Circle.load(circleId);
     if (circle) {
-        circle.visibility = event.params.newVisibilty;
+        circle.visibility = event.params.newVisibility;
         circle.updatedAt = event.block.timestamp;
         circle.save();
     }
@@ -274,8 +275,22 @@ export function handleCollateralReturned(event: CollateralReturnedEvent): void {
     const collateralReturned = new CollateralReturned(event.transaction.hash);
     collateralReturned.user = user.id;
     collateralReturned.circleId = event.params.circleId;
-    collateralReturned.amount = event.params.amt;
+    collateralReturned.amount = event.params.amount;
     collateralReturned.transaction = transaction.id;
 
     collateralReturned.save();
 }
+
+export function handleDeadCircleFeeDeducted(event: DeadCircleFeeDeductedEvent): void {
+    const transaction = createTransaction(event);
+    const user = getOrCreateUser(event.params.creator)
+
+    const deadCircleFeeDeducted = new DeadCircleFeeDeducted(event.transaction.hash);
+    deadCircleFeeDeducted.creator = event.params.creator;
+    deadCircleFeeDeducted.circleId = event.params.circleId;
+    deadCircleFeeDeducted.deadFee = event.params.amount;
+    deadCircleFeeDeducted.transaction = transaction.id;
+
+    deadCircleFeeDeducted.save();
+}
+    

@@ -283,3 +283,11 @@ type CollateralReturned @entity(immutable: true) {
   amount: BigInt! # uint256
   transaction: Transaction!
 }
+
+type DeadCircleFeeDeducted @entity(immutable: true) {
+  id: Bytes!
+  circleId: BigInt! # uint256
+  creator: User!
+  deadFee: BigInt! # uint256
+  transaction: Transaction!
+}
