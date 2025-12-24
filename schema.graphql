@@ -275,3 +275,11 @@ type MemberInvited @entity(immutable: true) {
   invitedAt: BigInt!
   transaction: Transaction!
 }
+
+type CollateralReturned @entity(immutable: true) {
+  id: Bytes!
+  user: User!
+  circleId: BigInt! # uint256
+  amount: BigInt! # uint256
+  transaction: Transaction!
+}

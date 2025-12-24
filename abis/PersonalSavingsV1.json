@@ -195,19 +195,13 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "targetAmount",
+        "name": "amount",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
         "name": "currentAmount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "contributionAmount",
         "type": "uint256"
       },
       {

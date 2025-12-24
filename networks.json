@@ -1,11 +1,17 @@
 {
   "celo-sepolia": {
     "UserProfileV1": {
-      "address": "0x7Ed5Bd07bFE530Fe3f8Be08c14fa2F1648e172E3",
-      "startBlock": 9137355
+      "address": "0xBFd612c68D9FFABFA3500aB9063af0979A8a478f",
+      "startBlock": 13113966
     },
     "ReputationV1": {
-      "address": "0xDcb474A33E41fcf76Fa9b66F1cfF7AB1322F3979"
+      "address": "0x985E4d5514a7F78cbeaeb7CAB1edCaf9b264Da7C"
+    },
+    "PersonalSavingsV1": {
+      "address": "0x66CeED0eC44b33CC8D5498A89332D1C2979CD6B5"
+    },
+    "CircleSavingsV1": {
+      "address": "0xB1982ECf201aB6FcB9E10fF4a7fB167DA73d5C69"
     }
   }
 }

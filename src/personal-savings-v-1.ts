@@ -18,9 +18,9 @@ export function handlePersonalGoalCreated(
   personalGoalCreated.user = user.id;
   personalGoalCreated.goalId = event.params.goalId;
   personalGoalCreated.goalName = event.params.name;
-  personalGoalCreated.goalAmount = event.params.targetAmount;
+  personalGoalCreated.goalAmount = event.params.amount;
   personalGoalCreated.currentAmount = event.params.currentAmount;
-  personalGoalCreated.contributionAmount = event.params.contributionAmount;
+  personalGoalCreated.contributionAmount = event.params.amount;
   personalGoalCreated.frequency = event.params.frequency;
   personalGoalCreated.deadline = event.params.deadline;
   personalGoalCreated.isActive = event.params.isActive;
@@ -33,9 +33,9 @@ export function handlePersonalGoalCreated(
   personalGoal.user = user.id;
   personalGoal.goalId = event.params.goalId;
   personalGoal.goalName = event.params.name;
-  personalGoal.goalAmount = event.params.targetAmount;
+  personalGoal.goalAmount = event.params.amount;
   personalGoal.currentAmount = event.params.currentAmount;
-  personalGoal.contributionAmount = event.params.contributionAmount;
+  personalGoal.contributionAmount = event.params.amount;
   personalGoal.frequency = event.params.frequency;
   personalGoal.deadline = event.params.deadline;
   personalGoal.isActive = event.params.isActive;

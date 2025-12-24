@@ -8,9 +8,9 @@ dataSources:
     name: UserProfileProxy
     network: celo-sepolia
     source:
-      address: "0xe7Fd5C712BA26cd3a25faaDE4Be258585D0879c2"
+      address: "0xBFd612c68D9FFABFA3500aB9063af0979A8a478f"
       abi: UserProfileV1
-      startBlock: 10770364
+      startBlock: 13113960
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -31,9 +31,9 @@ dataSources:
     name: ReputationProxy
     network: celo-sepolia
     source:
-      address: "0xB4A1901C719c8100F15168B580828e9a15e6E5ef"
+      address: "0x985E4d5514a7F78cbeaeb7CAB1edCaf9b264Da7C"
       abi: ReputationV1
-      startBlock: 10770364
+      startBlock: 13113960
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -62,14 +62,13 @@ dataSources:
         - event: GoalCompleted(indexed address,indexed uint256,uint256)
           handler: handleGoalCompleted
       file: ./src/reputation-v-1.ts
-
   - kind: ethereum
     name: PersonalSavingsProxy
     network: celo-sepolia
     source:
-      address: "0x1e52BEC08Fd8fcbE1bE4Fe5E9b1Bd69659EC2360"
+      address: "0x66CeED0eC44b33CC8D5498A89332D1C2979CD6B5"
       abi: PersonalSavingsV1
-      startBlock: 10770364
+      startBlock: 13113960
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -83,21 +82,20 @@ dataSources:
         - name: PersonalSavingsV1
           file: ./abis/PersonalSavingsV1.json
       eventHandlers:
-        - event: PersonalGoalCreated(indexed uint256,indexed address,string,indexed uint256,uint256,uint256,uint8,uint256,bool)
+        - event: PersonalGoalCreated(indexed uint256,indexed address,string,indexed uint256,uint256,uint8,uint256,bool)
           handler: handlePersonalGoalCreated
         - event: GoalContribution(indexed uint256,indexed address,uint256,uint256)
           handler: handleGoalContribution
         - event: GoalWithdrawn(indexed uint256,indexed address,uint256,uint256)
           handler: handleGoalWithdrawn
       file: ./src/personal-savings-v-1.ts
-
   - kind: ethereum
     name: CircleSavingsProxy
     network: celo-sepolia
     source:
-      address: "0xCB6163551fD8b5e68E336Bec200d223eA0734A14"
+      address: "0xB1982ECf201aB6FcB9E10fF4a7fB167DA73d5C69"
       abi: CircleSavingsV1
-      startBlock: 10770364
+      startBlock: 13113960
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -116,6 +114,7 @@ dataSources:
         - VoteExecuted
         - ContributionMade
         - MemberForfeited
+        - CollateralReturned
       abis:
         - name: CircleSavingsV1
           file: ./abis/CircleSavingsV1.json
@@ -146,4 +145,6 @@ dataSources:
           handler: handleContributionMade
         - event: MemberForfeited(indexed uint256,uint256,address,indexed uint256,indexed address)
           handler: handleMemberForfeited
+        - event: CollateralReturned(indexed uint256,indexed address,indexed uint256)
+          handler: handleCollateralReturned
       file: ./src/circle-savings-v-1.ts

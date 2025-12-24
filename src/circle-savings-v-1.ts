@@ -13,8 +13,9 @@ import {
     VoteExecuted as VoteExecutedEvent,
     ContributionMade as ContributionMadeEvent,
     MemberForfeited as MemberForfeitedEvent,
+    CollateralReturned as CollateralReturnedEvent,
 } from "../generated/CircleSavingsProxy/CircleSavingsV1"
-import { Circle, CircleCreated, CircleJoined, CircleStarted, CollateralWithdrawn, ContributionMade, MemberForfeited, MemberInvited, PayoutDistributed, PositionAssigned, VisibilityUpdated, VoteCast, VoteExecuted, VotingInitiated } from "../generated/schema";
+import { Circle, CircleCreated, CircleJoined, CircleStarted, CollateralReturned, CollateralWithdrawn, ContributionMade, MemberForfeited, MemberInvited, PayoutDistributed, PositionAssigned, VisibilityUpdated, VoteCast, VoteExecuted, VotingInitiated } from "../generated/schema";
 import { createTransaction, getOrCreateUser } from "./utils"
 
 export function handleCircleCreated(event: CircleCreatedEvent): void {
@@ -65,7 +66,7 @@ export function handleCircleJoined(event: CircleJoinedEvent): void {
     // Create the immutable join event record
     const circleJoined = new CircleJoined(event.transaction.hash);
     circleJoined.circleId = event.params.circleId;
-    
+
     circleJoined.user = user.id
     circleJoined.currentMembers = event.params.currentMembers;
     circleJoined.circleState = event.params.state;
@@ -122,8 +123,16 @@ export function handlePayoutDistributed(event: PayoutDistributedEvent): void {
     const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
     const circle = Circle.load(circleId);
     if (circle) {
-        // The contract increments round after payout, so currentRound = payout round + 1
-        circle.currentRound = event.params.round.plus(BigInt.fromI32(1));
+        // The contract increments round after payout ONLY if round < totalRounds (maxMembers)
+        // If round == totalRounds, the circle is completed.
+        if (event.params.round.lt(circle.maxMembers)) {
+            circle.currentRound = event.params.round.plus(BigInt.fromI32(1));
+        } else {
+            // Circle is completed
+            circle.state = 4; // CircleState.COMPLETED
+            // Ensure currentRound reflects the final round (stays at maxMembers)
+            circle.currentRound = circle.maxMembers;
+        }
         circle.updatedAt = event.block.timestamp;
         circle.save();
     }
@@ -250,10 +259,23 @@ export function handleVisibilityUpdated(event: VisibilityUpdatedEvent): void {
     const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
     const circle = Circle.load(circleId);
     if (circle) {
-        circle.visibility = event.params.newVisibility;
+        circle.visibility = event.params.newVisibilty;
         circle.updatedAt = event.block.timestamp;
         circle.save();
     }
 
     visibilityUpdated.save();
+}
+
+export function handleCollateralReturned(event: CollateralReturnedEvent): void {
+    const transaction = createTransaction(event);
+    const user = getOrCreateUser(event.params.member)
+
+    const collateralReturned = new CollateralReturned(event.transaction.hash);
+    collateralReturned.user = user.id;
+    collateralReturned.circleId = event.params.circleId;
+    collateralReturned.amount = event.params.amt;
+    collateralReturned.transaction = transaction.id;
+
+    collateralReturned.save();
 }
