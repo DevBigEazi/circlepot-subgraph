@@ -9,7 +9,8 @@ type Transaction @entity(immutable: true) {
 type User @entity(immutable: false) {
   id: Bytes!
   email: String! @unique # string
-  username: String! @unique # string
+  username: String! # string
+  usernameLowercase: String! @unique # string
   fullName: String! # string
   accountId: BigInt! @unique # uint256
   photo: String! # string

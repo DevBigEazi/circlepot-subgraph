@@ -17,6 +17,7 @@ export function handleProfileCreated(event: ProfileCreatedEvent): void {
   user.accountId = event.params.accountId;
   user.email = event.params.email;
   user.username = event.params.username;
+  user.usernameLowercase = event.params.username.toLowerCase();
   user.fullName = event.params.fullName;
   user.photo = event.params.profilePhoto;
   user.createdAt = event.params.createdAt;
@@ -39,7 +40,7 @@ export function handlePhotoUpdated(event: PhotoUpdatedEvent): void {
 
   photoUpdated.transaction = transaction.id;
   photoUpdated.user = user.id;
-  
+
   user.save();
   photoUpdated.save();
 }

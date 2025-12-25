@@ -19,6 +19,7 @@ export function getOrCreateUser(address: Bytes): User {
     user.id = address;
     user.email = "";
     user.username = "";
+    user.usernameLowercase = "";
     user.fullName = "";
     user.accountId = BigInt.fromI32(0);
     user.photo = "";
