@@ -154,10 +154,12 @@ type Circle @entity(immutable: false) {
   maxMembers: BigInt! # uint256
   currentMembers: BigInt! # uint256
   visibility: Int! # 0 = Private(default), 1 = Public
-  state: Int! # 0 = Pending, 1 = Active, 2 = Completed, 3 = Withdrawn
+  state: Int! # 0 = PENDING, 1 = CREATED, 2 = VOTING, 3 = ACTIVE, 4 = COMPLETED, 5 = DEAD
   createdAt: BigInt! # uint256
   startedAt: BigInt! # uint256 (0 if not started)
   updatedAt: BigInt! # uint256
+  lastVoteExecuted: VoteExecuted # Reference to last vote
+  voteWithdrawWon: Boolean
 }
 
 # Immutable event for circle creation
@@ -249,6 +251,7 @@ type VoteExecuted @entity(immutable: true) {
   startVoteTotal: BigInt! # uint256
   withdrawVoteTotal: BigInt! # uint256
   transaction: Transaction!
+  withdrawWon: Boolean! # True if startVoteTotal < 51% of total votes
 }
 
 type PayoutDistributed @entity(immutable: true) {

@@ -35,7 +35,7 @@ export function handlePersonalGoalCreated(
   personalGoal.goalName = event.params.name;
   personalGoal.goalAmount = event.params.amount;
   personalGoal.currentAmount = event.params.currentAmount;
-  personalGoal.contributionAmount = event.params.amount;
+  personalGoal.contributionAmount = event.params.currentAmount;
   personalGoal.frequency = event.params.frequency;
   personalGoal.deadline = event.params.deadline;
   personalGoal.isActive = event.params.isActive;

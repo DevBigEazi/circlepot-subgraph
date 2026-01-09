@@ -8,7 +8,7 @@ dataSources:
     name: UserProfileProxy
     network: celo-sepolia
     source:
-      address: "0xeE78A8712A5Da9B6bdAA5dcC31f2c7361b20e22F"
+      address: "0xb889E7941472D91E364B3627F0abcAD306bf7cDD"
       abi: UserProfileV1
       startBlock: 13298814
     mapping:
@@ -31,9 +31,9 @@ dataSources:
     name: ReputationProxy
     network: celo-sepolia
     source:
-      address: "0x6Ff0A4dc81B4E85dC7912741fA255A0441D380cE"
+      address: "0xe3fA2Ed4F0047266bf905eFc3E9348409E76aECA"
       abi: ReputationV1
-      startBlock: 13298814
+      startBlock: 13550343
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -66,9 +66,9 @@ dataSources:
     name: PersonalSavingsProxy
     network: celo-sepolia
     source:
-      address: "0xb723019b4BD9A9B3E51f98bf2543fBc3e4BF5358"
+      address: "0x27d68c08FF1630fD067A0551454cEAcdCa52c4c5"
       abi: PersonalSavingsV1
-      startBlock: 13298814
+      startBlock: 13550343
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -93,9 +93,9 @@ dataSources:
     name: CircleSavingsProxy
     network: celo-sepolia
     source:
-      address: "0x4bB20B8C8c2Dac679CaE9f0CCE515b953C83b299"
+      address: "0x983B11519aD1Ec28e60896C059221aB0023d4609"
       abi: CircleSavingsV1
-      startBlock: 13298814
+      startBlock: 13550343
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
