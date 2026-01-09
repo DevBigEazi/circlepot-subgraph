@@ -51,7 +51,7 @@ export function handleCircleCreated(event: CircleCreatedEvent): void {
     circle.currentMembers = BigInt.fromI32(1);
     circle.currentRound = BigInt.fromI32(0);
     circle.visibility = event.params.visibility;
-    circle.state = 0;
+    circle.state = 1;
     circle.createdAt = event.params.createdAt;
     circle.startedAt = BigInt.fromI32(0);
     circle.updatedAt = event.block.timestamp;
@@ -145,7 +145,12 @@ export function handlePositionAssigned(event: PositionAssignedEvent): void {
     const transaction = createTransaction(event);
     const user = getOrCreateUser(event.params.member);
 
-    const positionAssigned = new PositionAssigned(event.transaction.hash);
+    // Create unique ID: txHash + logIndex + member
+    const id = event.transaction.hash
+        .concatI32(event.logIndex.toI32())
+        .concat(event.params.member);
+    
+    const positionAssigned = new PositionAssigned(id); // ✅ UNIQUE ID
     positionAssigned.user = user.id;
     positionAssigned.circleId = event.params.circleId;
     positionAssigned.position = event.params.position;
@@ -164,7 +169,15 @@ export function handleCollateralWithdrawn(event: CollateralWithdrawnEvent): void
     collateralWithdrawn.amount = event.params.amount;
     collateralWithdrawn.transaction = transaction.id;
 
-    collateralWithdrawn.save()
+    const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
+    const circle = Circle.load(circleId);
+    if (circle) {
+        circle.state = 5; // DEAD
+        circle.updatedAt = event.block.timestamp;
+        circle.save();
+    }
+
+    collateralWithdrawn.save();
 }
 
 export function handleVotingInitiated(event: VotingInitiatedEvent): void {
@@ -175,6 +188,15 @@ export function handleVotingInitiated(event: VotingInitiatedEvent): void {
     votingInitiated.votingStartAt = event.params.votingStartTime;
     votingInitiated.votingEndAt = event.params.votingEndTime;
     votingInitiated.transaction = transaction.id;
+
+    // Update circle state to VOTING
+    const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
+    const circle = Circle.load(circleId);
+    if (circle) {
+        circle.state = 2; // VOTING
+        circle.updatedAt = event.block.timestamp;
+        circle.save();
+    }
 
     votingInitiated.save();
 }
@@ -212,9 +234,31 @@ export function handleVoteExecuted(event: VoteExecutedEvent): void {
     const voteExecuted = new VoteExecuted(event.transaction.hash);
     voteExecuted.circleId = event.params.circleId;
     voteExecuted.circleStarted = event.params.circleStarted;
-    voteExecuted.startVoteTotal = event.params.startVoteCount
+    voteExecuted.startVoteTotal = event.params.startVoteCount;
     voteExecuted.withdrawVoteTotal = event.params.withdrawVoteCount;
     voteExecuted.transaction = transaction.id;
+
+    // Calculate if withdraw won
+    const totalVotes = event.params.startVoteCount.plus(event.params.withdrawVoteCount);
+    const withdrawWon = totalVotes.gt(BigInt.fromI32(0)) 
+        ? event.params.startVoteCount.times(BigInt.fromI32(10000)).div(totalVotes).lt(BigInt.fromI32(5100))
+        : false;
+    
+    voteExecuted.withdrawWon = withdrawWon;
+
+    // Update Circle entity state back to CREATED after vote
+    const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
+    const circle = Circle.load(circleId);
+    if (circle) {
+        circle.state = 1; // Back to CREATED after vote execution
+        circle.updatedAt = event.block.timestamp;
+        
+        // Store vote result
+        circle.voteWithdrawWon = withdrawWon;
+        circle.lastVoteExecuted = voteExecuted.id;
+        
+        circle.save();
+    }
 
     voteExecuted.save();
 }
@@ -237,7 +281,12 @@ export function handleMemberForfeited(event: MemberForfeitedEvent): void {
     const transaction = createTransaction(event);
     const user = getOrCreateUser(event.params.forfeiter)
 
-    const memberForfeited = new MemberForfeited(event.transaction.hash);
+    // Create unique ID: txHash + logIndex + forfeited member
+    const id = event.transaction.hash
+        .concatI32(event.logIndex.toI32())
+        .concat(event.params.member);
+    
+    const memberForfeited = new MemberForfeited(id); // ✅ UNIQUE ID
     memberForfeited.forfeiter = user.id;
     memberForfeited.circleId = event.params.circleId;
     memberForfeited.round = event.params.round
@@ -272,7 +321,12 @@ export function handleCollateralReturned(event: CollateralReturnedEvent): void {
     const transaction = createTransaction(event);
     const user = getOrCreateUser(event.params.member)
 
-    const collateralReturned = new CollateralReturned(event.transaction.hash);
+    // Create unique ID: txHash + member address + circleId
+    const id = event.transaction.hash
+        .concatI32(event.logIndex.toI32())
+        .concat(event.params.member);
+    
+    const collateralReturned = new CollateralReturned(id); // ✅ UNIQUE ID
     collateralReturned.user = user.id;
     collateralReturned.circleId = event.params.circleId;
     collateralReturned.amount = event.params.amount;
