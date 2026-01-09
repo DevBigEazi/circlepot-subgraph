@@ -8,13 +8,17 @@ type Transaction @entity(immutable: true) {
 
 type User @entity(immutable: false) {
   id: Bytes!
-  email: String! @unique # string
+  email: String! # string (unique via mapping)
+  phoneNumber: String! # string (unique via mapping)
   username: String! # string
   usernameLowercase: String! @unique # string
   fullName: String! # string
   accountId: BigInt! @unique # uint256
   photo: String! # string
+  emailIsOriginal: Boolean! # true if email was provided at creation
+  phoneIsOriginal: Boolean! # true if phone was provided at creation
   lastPhotoUpdate: BigInt! # uint256
+  lastProfileUpdate: BigInt! # uint256 - timestamp of last profile/contact update
   createdAt: BigInt! # uint256
   hasProfile: Boolean! # bool
   repCategory: Int!
@@ -28,6 +32,8 @@ type User @entity(immutable: false) {
   circlesCreated: [CircleCreated!]! @derivedFrom(field: "user")
   circlesJoined: [CircleJoined!]! @derivedFrom(field: "user")
   circlesCompleted: [CircleCompleted]! @derivedFrom(field: "user")
+  profileUpdates: [ProfileUpdated!]! @derivedFrom(field: "user")
+  contactInfoUpdates: [ContactInfoUpdated!]! @derivedFrom(field: "user")
 }
 
 #User Profile
@@ -37,9 +43,19 @@ type ProfileCreated @entity(immutable: true) {
   transaction: Transaction!
 }
 
-type PhotoUpdated @entity(immutable: true) {
+type ProfileUpdated @entity(immutable: true) {
   id: Bytes!
   user: User!
+  fullName: String! # string
+  photo: String! # string
+  transaction: Transaction!
+}
+
+type ContactInfoUpdated @entity(immutable: true) {
+  id: Bytes!
+  user: User!
+  email: String! # string
+  phoneNumber: String! # string
   transaction: Transaction!
 }
 

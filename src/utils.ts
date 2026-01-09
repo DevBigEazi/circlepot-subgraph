@@ -18,6 +18,7 @@ export function getOrCreateUser(address: Bytes): User {
     user = new User(address);
     user.id = address;
     user.email = "";
+    user.phoneNumber = "";
     user.username = "";
     user.usernameLowercase = "";
     user.fullName = "";

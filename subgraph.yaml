@@ -8,9 +8,9 @@ dataSources:
     name: UserProfileProxy
     network: celo-sepolia
     source:
-      address: "0xb889E7941472D91E364B3627F0abcAD306bf7cDD"
+      address: "0xF5C93217524113362cF0cFCca3e6759846cfC40f"
       abi: UserProfileV1
-      startBlock: 13298814
+      startBlock: 13550343
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -18,14 +18,18 @@ dataSources:
       entities:
         - PhotoUpdated
         - ProfileCreated
+        - ProfileUpdated
+        - ContactInfoUpdated
       abis:
         - name: UserProfileV1
           file: ./abis/UserProfileV1.json
       eventHandlers:
-        - event: PhotoUpdated(indexed address,string)
-          handler: handlePhotoUpdated
-        - event: ProfileCreated(indexed address,string,string,string,uint256,string,uint256,bool)
+        - event: ProfileCreated(indexed address,string,string,string,string,uint256,string,uint256,bool)
           handler: handleProfileCreated
+        - event: ProfileUpdated(indexed address,string,string)
+          handler: handleProfileUpdated
+        - event: ContactInfoUpdated(indexed address,string,string)
+          handler: handleContactInfoUpdated
       file: ./src/user-profile-v-1.ts
   - kind: ethereum
     name: ReputationProxy
