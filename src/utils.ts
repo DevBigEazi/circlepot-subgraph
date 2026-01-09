@@ -24,7 +24,10 @@ export function getOrCreateUser(address: Bytes): User {
     user.fullName = "";
     user.accountId = BigInt.fromI32(0);
     user.photo = "";
+    user.emailIsOriginal = false;
+    user.phoneIsOriginal = false;
     user.lastPhotoUpdate = BigInt.fromI32(0);
+    user.lastProfileUpdate = BigInt.fromI32(0);
     user.createdAt = BigInt.fromI32(0);
     user.hasProfile = false;
     user.repCategory = 0;
