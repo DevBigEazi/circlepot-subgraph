@@ -94,6 +94,12 @@ dataSources:
           handler: handleGoalWithdrawn
         - event: YieldDistributed(indexed uint256,indexed address,uint256,uint256,address)
           handler: handleYieldDistributed
+        - event: VaultUpdated(indexed address,indexed address)
+          handler: handleVaultUpdated
+        - event: TokenAdded(indexed address)
+          handler: handleTokenAdded
+        - event: TokenRemoved(indexed address)
+          handler: handleTokenRemoved
       file: ./src/personal-savings-v-1.ts
   - kind: ethereum
     name: CircleSavingsProxy
@@ -128,17 +134,17 @@ dataSources:
       eventHandlers:
         - event: VisibilityUpdated(indexed uint256,indexed address,uint8)
           handler: handleVisibilityUpdated
-        - event: CircleCreated(indexed uint256,string,string,indexed address,indexed uint256,uint8,uint256,uint8,uint256,uint256)
+        - event: CircleCreated(indexed uint256,string,string,indexed address,indexed uint256,uint8,uint256,uint8,uint256,uint256,address)
           handler: handleCircleCreated
         - event: CircleJoined(indexed uint256,indexed address,indexed uint256,uint8)
           handler: handleCircleJoined
         - event: CircleStarted(indexed uint256,uint256,uint8)
           handler: handleCircleStarted
-        - event: PayoutDistributed(indexed uint256,indexed uint256,indexed address,uint256)
+        - event: PayoutDistributed(indexed uint256,indexed uint256,indexed address,uint256,address)
           handler: handlePayoutDistributed
         - event: PositionAssigned(indexed uint256,indexed address,uint256)
           handler: handlePositionAssigned
-        - event: CollateralWithdrawn(indexed uint256,indexed address,uint256)
+        - event: CollateralWithdrawn(indexed uint256,indexed address,uint256,address)
           handler: handleCollateralWithdrawn
         - event: VotingInitiated(indexed uint256,indexed uint256,indexed uint256)
           handler: handleVotingInitiated
@@ -148,12 +154,28 @@ dataSources:
           handler: handleMemberInvited
         - event: VoteExecuted(indexed uint256,bool,uint256,uint256)
           handler: handleVoteExecuted
-        - event: ContributionMade(indexed uint256,uint256,address,indexed uint256)
+        - event: ContributionMade(indexed uint256,uint256,address,indexed uint256,address)
           handler: handleContributionMade
+        - event: LateContributionMade(indexed uint256,uint256,address,uint256,uint256,address)
+          handler: handleLateContributionMade
         - event: MemberForfeited(indexed uint256,uint256,address,indexed uint256,indexed address)
           handler: handleMemberForfeited
-        - event: CollateralReturned(indexed uint256,indexed address,indexed uint256)
+        - event: CollateralReturned(indexed uint256,indexed address,indexed uint256,address)
           handler: handleCollateralReturned
         - event: DeadCircleFeeDeducted(indexed uint256,indexed address,indexed uint256)
           handler: handleDeadCircleFeeDeducted
+        - event: PointsAwarded(indexed uint256,indexed address,uint256,string)
+          handler: handlePointsAwarded
+        - event: YieldDistributed(indexed uint256,uint256,uint256,uint256)
+          handler: handleYieldDistributed
+        - event: LateFeeAddedToPool(indexed uint256,indexed address,uint256)
+          handler: handleLateFeeAddedToPool
+        - event: MemberRewardClaimed(indexed uint256,indexed address,uint256)
+          handler: handleMemberRewardClaimed
+        - event: VaultUpdated(indexed address,indexed address)
+          handler: handleVaultUpdated
+        - event: TokenAdded(indexed address)
+          handler: handleTokenAdded
+        - event: TokenRemoved(indexed address)
+          handler: handleTokenRemoved
       file: ./src/circle-savings-v-1.ts

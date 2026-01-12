@@ -170,6 +170,28 @@ type YieldDistributed @entity(immutable: true) {
   transaction: Transaction!
 }
 
+type VaultUpdated @entity(immutable: true) {
+  id: Bytes!
+  token: Bytes! # address
+  newVault: Bytes! # address
+  contractType: String! # "CIRCLE" or "PERSONAL"
+  transaction: Transaction!
+}
+
+type TokenAdded @entity(immutable: true) {
+  id: Bytes!
+  token: Bytes! # address
+  contractType: String! # "CIRCLE" or "PERSONAL"
+  transaction: Transaction!
+}
+
+type TokenRemoved @entity(immutable: true) {
+  id: Bytes!
+  token: Bytes! # address
+  contractType: String! # "CIRCLE" or "PERSONAL"
+  transaction: Transaction!
+}
+
 #Circle Savings
 # Mutable entity tracking current circle state
 type Circle @entity(immutable: false) {
@@ -191,6 +213,12 @@ type Circle @entity(immutable: false) {
   updatedAt: BigInt! # uint256
   lastVoteExecuted: VoteExecuted # Reference to last vote
   voteWithdrawWon: Boolean
+  token: Bytes! # address
+  isYieldEnabled: Boolean! # bool
+  lateFeePool: BigInt! # uint256
+  totalPoints: BigInt! # uint256
+  totalPot: BigInt! # uint256
+  contributionsThisRound: BigInt! # uint256
 }
 
 # Immutable event for circle creation
@@ -206,6 +234,8 @@ type CircleCreated @entity(immutable: true) {
   circleMaxMembers: BigInt! # uint256
   circleVisibility: Int! # 0 = Private(default), 1 = Public
   circleCreatedAt: BigInt! # uint256
+  token: Bytes! # address
+  isYieldEnabled: Boolean! # bool
   transaction: Transaction!
 }
 
@@ -232,6 +262,7 @@ type ContributionMade @entity(immutable: true) {
   circleId: BigInt! # uint256
   round: BigInt! # uint256
   amount: BigInt! # uint256
+  token: Bytes! # address
   transaction: Transaction!
 }
 
@@ -291,6 +322,7 @@ type PayoutDistributed @entity(immutable: true) {
   circleId: BigInt! # uint256
   round: BigInt! # uint256
   payoutAmount: BigInt! # uint256
+  token: Bytes! # address
   transaction: Transaction!
 }
 
@@ -299,6 +331,7 @@ type CollateralWithdrawn @entity(immutable: true) {
   user: User!
   circleId: BigInt! # uint256
   amount: BigInt! # uint256
+  token: Bytes! # address
   transaction: Transaction!
 }
 
@@ -316,6 +349,7 @@ type CollateralReturned @entity(immutable: true) {
   user: User!
   circleId: BigInt! # uint256
   amount: BigInt! # uint256
+  token: Bytes! # address
   transaction: Transaction!
 }
 
@@ -324,5 +358,50 @@ type DeadCircleFeeDeducted @entity(immutable: true) {
   circleId: BigInt! # uint256
   creator: User!
   deadFee: BigInt! # uint256
+  transaction: Transaction!
+}
+
+type LateContributionMade @entity(immutable: true) {
+  id: Bytes!
+  user: User!
+  circleId: BigInt! # uint256
+  round: BigInt! # uint256
+  amount: BigInt! # uint256
+  fee: BigInt! # uint256
+  token: Bytes! # address
+  transaction: Transaction!
+}
+
+type PointsAwarded @entity(immutable: true) {
+  id: Bytes!
+  user: User!
+  circleId: BigInt! # uint256
+  points: BigInt! # uint256
+  reason: String! # string
+  transaction: Transaction!
+}
+
+type CircleYieldDistributed @entity(immutable: true) {
+  id: Bytes!
+  circleId: BigInt! # uint256
+  totalSurplus: BigInt! # uint256
+  platformShare: BigInt! # uint256
+  communityShare: BigInt! # uint256
+  transaction: Transaction!
+}
+
+type LateFeeAddedToPool @entity(immutable: true) {
+  id: Bytes!
+  user: User!
+  circleId: BigInt! # uint256
+  amount: BigInt! # uint256
+  transaction: Transaction!
+}
+
+type MemberRewardClaimed @entity(immutable: true) {
+  id: Bytes!
+  user: User!
+  circleId: BigInt! # uint256
+  rewardAmount: BigInt! # uint256
   transaction: Transaction!
 }

@@ -4,9 +4,12 @@ import {
   GoalWithdrawn as GoalWithdrawnEvent,
   PersonalGoalCreated as PersonalGoalCreatedEvent,
   YieldDistributed as YieldDistributedEvent,
+  VaultUpdated as VaultUpdatedEvent,
+  TokenAdded as TokenAddedEvent,
+  TokenRemoved as TokenRemovedEvent,
   PersonalSavingsV1
 } from "../generated/PersonalSavingsProxy/PersonalSavingsV1";
-import { GoalContribution, GoalWithdrawn, PersonalGoal, PersonalGoalCreated, YieldDistributed } from "../generated/schema";
+import { GoalContribution, GoalWithdrawn, PersonalGoal, PersonalGoalCreated, YieldDistributed, VaultUpdated, TokenAdded, TokenRemoved } from "../generated/schema";
 import { createTransaction, getOrCreateUser } from "./utils";
 
 export function handlePersonalGoalCreated(
@@ -140,4 +143,35 @@ export function handleYieldDistributed(event: YieldDistributedEvent): void {
   yieldDistributed.transaction = transaction.id;
 
   yieldDistributed.save();
+}
+
+export function handleVaultUpdated(event: VaultUpdatedEvent): void {
+  const transaction = createTransaction(event);
+  const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+  const vaultUpdated = new VaultUpdated(id);
+  vaultUpdated.token = event.params.token;
+  vaultUpdated.newVault = event.params.newVault;
+  vaultUpdated.contractType = "PERSONAL";
+  vaultUpdated.transaction = transaction.id;
+  vaultUpdated.save();
+}
+
+export function handleTokenAdded(event: TokenAddedEvent): void {
+  const transaction = createTransaction(event);
+  const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+  const tokenAdded = new TokenAdded(id);
+  tokenAdded.token = event.params.token;
+  tokenAdded.contractType = "PERSONAL";
+  tokenAdded.transaction = transaction.id;
+  tokenAdded.save();
+}
+
+export function handleTokenRemoved(event: TokenRemovedEvent): void {
+  const transaction = createTransaction(event);
+  const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+  const tokenRemoved = new TokenRemoved(id);
+  tokenRemoved.token = event.params.token;
+  tokenRemoved.contractType = "PERSONAL";
+  tokenRemoved.transaction = transaction.id;
+  tokenRemoved.save();
 }
