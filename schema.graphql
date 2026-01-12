@@ -121,6 +121,8 @@ type PersonalGoal @entity(immutable: false) {
   isActive: Boolean! # bool
   createdAt: BigInt! # uint256
   updatedAt: BigInt! # uint256
+  token: Bytes! # address
+  isYieldEnabled: Boolean! # bool
 }
 
 type PersonalGoalCreated @entity(immutable: true) {
@@ -134,6 +136,7 @@ type PersonalGoalCreated @entity(immutable: true) {
   frequency: Int!
   deadline: BigInt! # uint256
   isActive: Boolean! # bool
+  token: Bytes! # address
   transaction: Transaction!
 }
 
@@ -142,6 +145,7 @@ type GoalContribution @entity(immutable: true) {
   user: User!
   amount: BigInt! # uint256
   goalId: BigInt! # uint256
+  token: Bytes! # address
   transaction: Transaction!
 }
 
@@ -152,6 +156,17 @@ type GoalWithdrawn @entity(immutable: true) {
   amount: BigInt! # uint256
   penalty: BigInt! # uint256
   isActive: Boolean! # bool
+  token: Bytes! # address
+  transaction: Transaction!
+}
+
+type YieldDistributed @entity(immutable: true) {
+  id: Bytes!
+  user: User!
+  goalId: BigInt! # uint256
+  yieldAmount: BigInt! # uint256
+  platformShare: BigInt! # uint256
+  token: Bytes! # address
   transaction: Transaction!
 }
 

@@ -86,12 +86,14 @@ dataSources:
         - name: PersonalSavingsV1
           file: ./abis/PersonalSavingsV1.json
       eventHandlers:
-        - event: PersonalGoalCreated(indexed uint256,indexed address,string,indexed uint256,uint256,uint8,uint256,bool)
+        - event: PersonalGoalCreated(indexed uint256,indexed address,string,indexed uint256,uint256,uint8,uint256,bool,address)
           handler: handlePersonalGoalCreated
-        - event: GoalContribution(indexed uint256,indexed address,uint256,uint256)
+        - event: GoalContribution(indexed uint256,indexed address,uint256,uint256,address)
           handler: handleGoalContribution
-        - event: GoalWithdrawn(indexed uint256,indexed address,uint256,uint256)
+        - event: GoalWithdrawn(indexed uint256,indexed address,uint256,uint256,address)
           handler: handleGoalWithdrawn
+        - event: YieldDistributed(indexed uint256,indexed address,uint256,uint256,address)
+          handler: handleYieldDistributed
       file: ./src/personal-savings-v-1.ts
   - kind: ethereum
     name: CircleSavingsProxy
