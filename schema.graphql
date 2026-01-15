@@ -8,13 +8,17 @@ type Transaction @entity(immutable: true) {
 
 type User @entity(immutable: false) {
   id: Bytes!
-  email: String! @unique # string
+  email: String! # string (unique via mapping)
+  phoneNumber: String! # string (unique via mapping)
   username: String! # string
   usernameLowercase: String! @unique # string
   fullName: String! # string
   accountId: BigInt! @unique # uint256
   photo: String! # string
+  emailIsOriginal: Boolean! # true if email was provided at creation
+  phoneIsOriginal: Boolean! # true if phone was provided at creation
   lastPhotoUpdate: BigInt! # uint256
+  lastProfileUpdate: BigInt! # uint256 - timestamp of last profile/contact update
   createdAt: BigInt! # uint256
   hasProfile: Boolean! # bool
   repCategory: Int!
@@ -28,6 +32,8 @@ type User @entity(immutable: false) {
   circlesCreated: [CircleCreated!]! @derivedFrom(field: "user")
   circlesJoined: [CircleJoined!]! @derivedFrom(field: "user")
   circlesCompleted: [CircleCompleted]! @derivedFrom(field: "user")
+  profileUpdates: [ProfileUpdated!]! @derivedFrom(field: "user")
+  contactInfoUpdates: [ContactInfoUpdated!]! @derivedFrom(field: "user")
 }
 
 #User Profile
@@ -37,9 +43,19 @@ type ProfileCreated @entity(immutable: true) {
   transaction: Transaction!
 }
 
-type PhotoUpdated @entity(immutable: true) {
+type ProfileUpdated @entity(immutable: true) {
   id: Bytes!
   user: User!
+  fullName: String! # string
+  photo: String! # string
+  transaction: Transaction!
+}
+
+type ContactInfoUpdated @entity(immutable: true) {
+  id: Bytes!
+  user: User!
+  email: String! # string
+  phoneNumber: String! # string
   transaction: Transaction!
 }
 
@@ -105,6 +121,8 @@ type PersonalGoal @entity(immutable: false) {
   isActive: Boolean! # bool
   createdAt: BigInt! # uint256
   updatedAt: BigInt! # uint256
+  token: Bytes! # address
+  isYieldEnabled: Boolean! # bool
 }
 
 type PersonalGoalCreated @entity(immutable: true) {
@@ -118,6 +136,7 @@ type PersonalGoalCreated @entity(immutable: true) {
   frequency: Int!
   deadline: BigInt! # uint256
   isActive: Boolean! # bool
+  token: Bytes! # address
   transaction: Transaction!
 }
 
@@ -126,6 +145,7 @@ type GoalContribution @entity(immutable: true) {
   user: User!
   amount: BigInt! # uint256
   goalId: BigInt! # uint256
+  token: Bytes! # address
   transaction: Transaction!
 }
 
@@ -136,6 +156,39 @@ type GoalWithdrawn @entity(immutable: true) {
   amount: BigInt! # uint256
   penalty: BigInt! # uint256
   isActive: Boolean! # bool
+  token: Bytes! # address
+  transaction: Transaction!
+}
+
+type YieldDistributed @entity(immutable: true) {
+  id: Bytes!
+  user: User!
+  goalId: BigInt! # uint256
+  yieldAmount: BigInt! # uint256
+  platformShare: BigInt! # uint256
+  token: Bytes! # address
+  transaction: Transaction!
+}
+
+type VaultUpdated @entity(immutable: true) {
+  id: Bytes!
+  token: Bytes! # address
+  newVault: Bytes! # address
+  contractType: String! # "CIRCLE" or "PERSONAL"
+  transaction: Transaction!
+}
+
+type TokenAdded @entity(immutable: true) {
+  id: Bytes!
+  token: Bytes! # address
+  contractType: String! # "CIRCLE" or "PERSONAL"
+  transaction: Transaction!
+}
+
+type TokenRemoved @entity(immutable: true) {
+  id: Bytes!
+  token: Bytes! # address
+  contractType: String! # "CIRCLE" or "PERSONAL"
   transaction: Transaction!
 }
 
@@ -160,6 +213,12 @@ type Circle @entity(immutable: false) {
   updatedAt: BigInt! # uint256
   lastVoteExecuted: VoteExecuted # Reference to last vote
   voteWithdrawWon: Boolean
+  token: Bytes! # address
+  isYieldEnabled: Boolean! # bool
+  lateFeePool: BigInt! # uint256
+  totalPoints: BigInt! # uint256
+  totalPot: BigInt! # uint256
+  contributionsThisRound: BigInt! # uint256
 }
 
 # Immutable event for circle creation
@@ -175,6 +234,8 @@ type CircleCreated @entity(immutable: true) {
   circleMaxMembers: BigInt! # uint256
   circleVisibility: Int! # 0 = Private(default), 1 = Public
   circleCreatedAt: BigInt! # uint256
+  token: Bytes! # address
+  isYieldEnabled: Boolean! # bool
   transaction: Transaction!
 }
 
@@ -201,6 +262,7 @@ type ContributionMade @entity(immutable: true) {
   circleId: BigInt! # uint256
   round: BigInt! # uint256
   amount: BigInt! # uint256
+  token: Bytes! # address
   transaction: Transaction!
 }
 
@@ -260,6 +322,7 @@ type PayoutDistributed @entity(immutable: true) {
   circleId: BigInt! # uint256
   round: BigInt! # uint256
   payoutAmount: BigInt! # uint256
+  token: Bytes! # address
   transaction: Transaction!
 }
 
@@ -268,6 +331,7 @@ type CollateralWithdrawn @entity(immutable: true) {
   user: User!
   circleId: BigInt! # uint256
   amount: BigInt! # uint256
+  token: Bytes! # address
   transaction: Transaction!
 }
 
@@ -285,6 +349,7 @@ type CollateralReturned @entity(immutable: true) {
   user: User!
   circleId: BigInt! # uint256
   amount: BigInt! # uint256
+  token: Bytes! # address
   transaction: Transaction!
 }
 
@@ -293,5 +358,50 @@ type DeadCircleFeeDeducted @entity(immutable: true) {
   circleId: BigInt! # uint256
   creator: User!
   deadFee: BigInt! # uint256
+  transaction: Transaction!
+}
+
+type LateContributionMade @entity(immutable: true) {
+  id: Bytes!
+  user: User!
+  circleId: BigInt! # uint256
+  round: BigInt! # uint256
+  amount: BigInt! # uint256
+  fee: BigInt! # uint256
+  token: Bytes! # address
+  transaction: Transaction!
+}
+
+type PointsAwarded @entity(immutable: true) {
+  id: Bytes!
+  user: User!
+  circleId: BigInt! # uint256
+  points: BigInt! # uint256
+  reason: String! # string
+  transaction: Transaction!
+}
+
+type CircleYieldDistributed @entity(immutable: true) {
+  id: Bytes!
+  circleId: BigInt! # uint256
+  totalSurplus: BigInt! # uint256
+  platformShare: BigInt! # uint256
+  communityShare: BigInt! # uint256
+  transaction: Transaction!
+}
+
+type LateFeeAddedToPool @entity(immutable: true) {
+  id: Bytes!
+  user: User!
+  circleId: BigInt! # uint256
+  amount: BigInt! # uint256
+  transaction: Transaction!
+}
+
+type MemberRewardClaimed @entity(immutable: true) {
+  id: Bytes!
+  user: User!
+  circleId: BigInt! # uint256
+  rewardAmount: BigInt! # uint256
   transaction: Transaction!
 }
