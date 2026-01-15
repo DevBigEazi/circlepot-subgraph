@@ -10,7 +10,7 @@ dataSources:
     source:
       address: "0x72A2C2c1BFe6a66DD9C9eA91e6B385A96782157e"
       abi: UserProfile
-      startBlock: 15101887
+      startBlock: 15217429
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -59,7 +59,7 @@ dataSources:
     source:
       address: "0x7FcbDFb1b973ad59972d7b7e01c4d5d69058d701"
       abi: Reputation
-      startBlock: 15101887
+      startBlock: 15217429
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -94,7 +94,7 @@ dataSources:
     source:
       address: "0x713480C569b9a99cdE6e5632b27f62582169DeBf"
       abi: PersonalSavings
-      startBlock: 15101887
+      startBlock: 15217429
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -129,7 +129,7 @@ dataSources:
     source:
       address: "0x8082674ba835B85B0737a60fD2eD3eeb7C05285C"
       abi: CircleSavings
-      startBlock: 15101887
+      startBlock: 15217429
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9

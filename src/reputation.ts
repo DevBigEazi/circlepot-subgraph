@@ -6,7 +6,7 @@ import {
   ReputationDecreased as ReputationDecreasedEvent,
   ReputationIncreased as ReputationIncreasedEvent,
   ScoreCategoryChanged as ScoreCategoryChangedEvent,
-} from "../generated/ReputationProxy/ReputationV1";
+} from "../generated/ReputationProxy/Reputation";
 import {
   CircleCompleted,
   GoalCompleted,
