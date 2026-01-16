@@ -56,8 +56,10 @@ type User @entity(immutable: false) {
   referrals: [User!]! @derivedFrom(field: "referredBy")
   referralCount: BigInt! # Successful referrals count
   totalReferralRewardsEarned: BigInt! # uint256
+  pendingRewardsEarned: BigInt! # uint256
   userReferred: [UserReferred!]! @derivedFrom(field: "user")
   referralRewards: [ReferralRewardPaid!]! @derivedFrom(field: "referrer")
+  isReferralProcessed: Boolean! # true if this user's referral has been processed (first goal created)
 }
 
 #User Profile
@@ -99,6 +101,15 @@ type ReferralRewardPaid @entity(immutable: true) {
   transaction: Transaction!
 }
 
+type ReferralRewardPending @entity(immutable: true) {
+  id: Bytes!
+  referrer: User!
+  referee: User!
+  token: Bytes! # address
+  amount: BigInt! # uint256
+  transaction: Transaction!
+}
+
 type ReferralSystem @entity(immutable: false) {
   id: Bytes! # "system"
   rewardsEnabled: Boolean!
@@ -116,15 +127,6 @@ type ReferralTokenSettings @entity(immutable: false) {
   bonusAmount: BigInt!
   campaignBonusAmount: BigInt!
   totalRewardsPaid: BigInt!
-  totalRewardsFunded: BigInt!
-}
-
-type RewardFundsDeposit @entity(immutable: true) {
-  id: Bytes!
-  from: Bytes! # address
-  token: Bytes! # address
-  amount: BigInt! # uint256
-  transaction: Transaction!
 }
 
 #User Reputation

@@ -37,6 +37,8 @@ export function getOrCreateUser(address: Bytes): User {
     user.totalCirclesCompleted = BigInt.fromI32(0);
     user.referralCount = BigInt.fromI32(0);
     user.totalReferralRewardsEarned = BigInt.fromI32(0);
+    user.pendingRewardsEarned = BigInt.fromI32(0);
+    user.isReferralProcessed = false;
 
     user.save();
   }
@@ -69,7 +71,6 @@ export function getOrCreateReferralTokenSettings(token: Bytes): ReferralTokenSet
     settings.bonusAmount = BigInt.fromI32(0);
     settings.campaignBonusAmount = BigInt.fromI32(0);
     settings.totalRewardsPaid = BigInt.fromI32(0);
-    settings.totalRewardsFunded = BigInt.fromI32(0);
 
     settings.save();
   }

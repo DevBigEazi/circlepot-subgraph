@@ -8,9 +8,9 @@ dataSources:
     name: UserProfileProxy
     network: celo-sepolia
     source:
-      address: "0x72A2C2c1BFe6a66DD9C9eA91e6B385A96782157e"
+      address: "0xfC96B9b987b185C0c4fc3E3401e306d2DF49d902"
       abi: UserProfile
-      startBlock: 15217429
+      startBlock: 15280907
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -34,6 +34,8 @@ dataSources:
           handler: handleUserReferred
         - event: ReferralRewardPaid(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleReferralRewardPaid
+        - event: ReferralRewardPending(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleReferralRewardPending
         - event: ReferralRewardsToggled(bool,uint256)
           handler: handleReferralRewardsToggled
         - event: ReferralBonusUpdated(indexed address,uint256,uint256,uint256)
@@ -44,8 +46,6 @@ dataSources:
           handler: handleCampaignBonusUpdated
         - event: CampaignEnded(uint256)
           handler: handleCampaignEnded
-        - event: RewardFundsDeposited(indexed address,indexed address,uint256)
-          handler: handleRewardFundsDeposited
         - event: TokenAdded(indexed address)
           handler: handleTokenAdded
         - event: TokenRemoved(indexed address)
@@ -57,9 +57,9 @@ dataSources:
     name: ReputationProxy
     network: celo-sepolia
     source:
-      address: "0x7FcbDFb1b973ad59972d7b7e01c4d5d69058d701"
+      address: "0x854B316F81ad5Ea70c479FCf32d67f7615fEc6a7"
       abi: Reputation
-      startBlock: 15217429
+      startBlock: 15280907
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -92,9 +92,9 @@ dataSources:
     name: PersonalSavingsProxy
     network: celo-sepolia
     source:
-      address: "0x713480C569b9a99cdE6e5632b27f62582169DeBf"
+      address: "0x80dD110F922309db0114ad63D18742995B639C75"
       abi: PersonalSavings
-      startBlock: 15217429
+      startBlock: 15280907
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -127,9 +127,9 @@ dataSources:
     name: CircleSavingsProxy
     network: celo-sepolia
     source:
-      address: "0x8082674ba835B85B0737a60fD2eD3eeb7C05285C"
+      address: "0xceB735CF16d8Cc2F388F78f1139360A0A4594102"
       abi: CircleSavings
-      startBlock: 15217429
+      startBlock: 15101888
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9

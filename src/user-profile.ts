@@ -9,10 +9,10 @@ import {
   CampaignStarted as CampaignStartedEvent,
   CampaignBonusUpdated as CampaignBonusUpdatedEvent,
   CampaignEnded as CampaignEndedEvent,
-  RewardFundsDeposited as RewardFundsDepositedEvent,
   TokenAdded as TokenAddedEvent,
   TokenRemoved as TokenRemovedEvent,
   PersonalSavingsContractUpdated as PersonalSavingsContractUpdatedEvent,
+  ReferralRewardPending as ReferralRewardPendingEvent,
 } from "../generated/UserProfileProxy/UserProfile"
 import {
   ProfileCreated,
@@ -20,9 +20,9 @@ import {
   ContactInfoUpdated,
   UserReferred,
   ReferralRewardPaid,
+  ReferralRewardPending,
   ReferralSystem,
   ReferralTokenSettings,
-  RewardFundsDeposit,
 } from "../generated/schema";
 import {
   getOrCreateReferralSystem,
@@ -30,7 +30,7 @@ import {
   createTransaction,
   getOrCreateUser,
 } from "./utils";
-import { BigInt, store } from "@graphprotocol/graph-ts";
+import { BigInt, store, Address } from "@graphprotocol/graph-ts";
 
 export function handleProfileCreated(event: ProfileCreatedEvent): void {
   const transaction = createTransaction(event);
@@ -128,10 +128,27 @@ export function handleReferralRewardPaid(event: ReferralRewardPaidEvent): void {
 
   const referrer = getOrCreateUser(event.params.referrer);
 
-  referrer.referralCount = referrer.referralCount.plus(BigInt.fromI32(1));
-  referrer.totalReferralRewardsEarned = referrer.totalReferralRewardsEarned.plus(
-    event.params.rewardAmount
-  );
+  // If referee is not address zero, it's a new referral reward (either partial or full)
+  if (event.params.referee.notEqual(Address.zero())) {
+    const referee = getOrCreateUser(event.params.referee);
+    if (!referee.isReferralProcessed) {
+      referrer.referralCount = referrer.referralCount.plus(BigInt.fromI32(1));
+      referee.isReferralProcessed = true;
+      referee.save();
+    }
+    // Increment earned rewards
+    referrer.totalReferralRewardsEarned = referrer.totalReferralRewardsEarned.plus(
+      event.params.rewardAmount
+    );
+  }
+  // If referee IS address zero, it means it's a payment for a previously pending reward
+  // which was already added to totalReferralRewardsEarned when the ReferralRewardPending event fired.
+  if (event.params.referee.equals(Address.zero())) {
+    referrer.pendingRewardsEarned = referrer.pendingRewardsEarned.minus(
+      event.params.rewardAmount
+    );
+  }
+
   referrer.save();
 
   const settings = getOrCreateReferralTokenSettings(event.params.token);
@@ -146,6 +163,41 @@ export function handleReferralRewardPaid(event: ReferralRewardPaidEvent): void {
   referralRewardPaid.rewardAmount = event.params.rewardAmount;
   referralRewardPaid.transaction = transaction.id;
   referralRewardPaid.save();
+}
+
+export function handleReferralRewardPending(
+  event: ReferralRewardPendingEvent
+): void {
+  const transaction = createTransaction(event);
+  const referralRewardPending = new ReferralRewardPending(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  );
+
+  const referrer = getOrCreateUser(event.params.referrer);
+  const referee = getOrCreateUser(event.params.referee);
+
+  // Mark referral as processed if not already
+  if (!referee.isReferralProcessed) {
+    referrer.referralCount = referrer.referralCount.plus(BigInt.fromI32(1));
+    referee.isReferralProcessed = true;
+    referee.save();
+  }
+
+  // Increment earned rewards (it's pending, but it's earned)
+  referrer.totalReferralRewardsEarned = referrer.totalReferralRewardsEarned.plus(
+    event.params.amount
+  );
+  referrer.pendingRewardsEarned = referrer.pendingRewardsEarned.plus(
+    event.params.amount
+  );
+  referrer.save();
+
+  referralRewardPending.referrer = referrer.id;
+  referralRewardPending.referee = referee.id;
+  referralRewardPending.token = event.params.token;
+  referralRewardPending.amount = event.params.amount;
+  referralRewardPending.transaction = transaction.id;
+  referralRewardPending.save();
 }
 
 export function handleReferralRewardsToggled(
@@ -186,26 +238,7 @@ export function handleCampaignEnded(event: CampaignEndedEvent): void {
   system.save();
 }
 
-export function handleRewardFundsDeposited(
-  event: RewardFundsDepositedEvent
-): void {
-  const transaction = createTransaction(event);
-  const deposit = new RewardFundsDeposit(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
 
-  deposit.from = event.params.from;
-  deposit.token = event.params.token;
-  deposit.amount = event.params.amount;
-  deposit.transaction = transaction.id;
-  deposit.save();
-
-  const settings = getOrCreateReferralTokenSettings(event.params.token);
-  settings.totalRewardsFunded = settings.totalRewardsFunded.plus(
-    event.params.amount
-  );
-  settings.save();
-}
 
 export function handleTokenAdded(event: TokenAddedEvent): void {
   getOrCreateReferralTokenSettings(event.params.token);
