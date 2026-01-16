@@ -23,9 +23,9 @@ import {
     VaultUpdated as VaultUpdatedEvent,
     TokenAdded as TokenAddedEvent,
     TokenRemoved as TokenRemovedEvent,
-} from "../generated/CircleSavingsProxy/CircleSavingsV1"
+} from "../generated/CircleSavingsProxy/CircleSavings"
 import { Circle, CircleCreated, CircleJoined, CircleStarted, CollateralReturned, CollateralWithdrawn, ContributionMade, DeadCircleFeeDeducted, MemberForfeited, MemberInvited, PayoutDistributed, PositionAssigned, VisibilityUpdated, VoteCast, VoteExecuted, VotingInitiated, LateContributionMade, PointsAwarded, CircleYieldDistributed, LateFeeAddedToPool, MemberRewardClaimed, VaultUpdated, TokenAdded, TokenRemoved } from "../generated/schema";
-import { CircleSavingsV1 } from "../generated/CircleSavingsProxy/CircleSavingsV1";
+import { CircleSavings } from "../generated/CircleSavingsProxy/CircleSavings";
 import { createTransaction, getOrCreateUser } from "./utils"
 
 export function handleCircleCreated(event: CircleCreatedEvent): void {
@@ -45,6 +45,7 @@ export function handleCircleCreated(event: CircleCreatedEvent): void {
     circleCreated.circleVisibility = event.params.visibility;
     circleCreated.circleCreatedAt = event.params.createdAt;
     circleCreated.token = event.params.token;
+    circleCreated.yieldAPY = event.params.yieldAPY;
     circleCreated.transaction = transaction.id;
 
     // Create the mutable Circle state entity
@@ -71,7 +72,7 @@ export function handleCircleCreated(event: CircleCreatedEvent): void {
     circle.totalPot = BigInt.fromI32(0);
     circle.contributionsThisRound = BigInt.fromI32(0);
 
-    const contract = CircleSavingsV1.bind(event.address);
+    const contract = CircleSavings.bind(event.address);
     const configResult = contract.try_circleConfigs(event.params.circleId);
     if (!configResult.reverted) {
         circle.isYieldEnabled = configResult.value.getIsYieldEnabled();
@@ -506,6 +507,7 @@ export function handleVaultUpdated(event: VaultUpdatedEvent): void {
     const vaultUpdated = new VaultUpdated(id);
     vaultUpdated.token = event.params.token;
     vaultUpdated.newVault = event.params.newVault;
+    vaultUpdated.projectName = event.params.project;
     vaultUpdated.contractType = "CIRCLE";
     vaultUpdated.transaction = transaction.id;
     vaultUpdated.save();

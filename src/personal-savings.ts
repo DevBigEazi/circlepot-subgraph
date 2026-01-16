@@ -1,4 +1,4 @@
-import { Bytes } from "@graphprotocol/graph-ts";
+import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
   GoalContribution as GoalContributionEvent,
   GoalWithdrawn as GoalWithdrawnEvent,
@@ -7,10 +7,10 @@ import {
   VaultUpdated as VaultUpdatedEvent,
   TokenAdded as TokenAddedEvent,
   TokenRemoved as TokenRemovedEvent,
-  PersonalSavingsV1
-} from "../generated/PersonalSavingsProxy/PersonalSavingsV1";
-import { GoalContribution, GoalWithdrawn, PersonalGoal, PersonalGoalCreated, YieldDistributed, VaultUpdated, TokenAdded, TokenRemoved } from "../generated/schema";
-import { createTransaction, getOrCreateUser } from "./utils";
+  PersonalSavings
+} from "../generated/PersonalSavingsProxy/PersonalSavings";
+import { GoalContribution, GoalWithdrawn, PersonalGoal, PersonalGoalCreated, YieldDistributed, VaultUpdated, TokenAdded, TokenRemoved, PersonalSavingsSystem, PersonalSavingsTokenSettings } from "../generated/schema";
+import { createTransaction, getOrCreateUser, getOrCreatePersonalSavingsSystem, getOrCreatePersonalSavingsTokenSettings } from "./utils";
 
 export function handlePersonalGoalCreated(
   event: PersonalGoalCreatedEvent
@@ -30,6 +30,7 @@ export function handlePersonalGoalCreated(
   personalGoalCreated.deadline = event.params.deadline;
   personalGoalCreated.isActive = event.params.isActive;
   personalGoalCreated.token = event.params.token;
+  personalGoalCreated.yieldAPY = event.params.yieldAPY;
   personalGoalCreated.transaction = transaction.id;
 
   // Create the mutable goal state entity
@@ -50,7 +51,7 @@ export function handlePersonalGoalCreated(
   personalGoal.token = event.params.token;
 
   // Fetch isYieldEnabled from contract
-  const contract = PersonalSavingsV1.bind(event.address);
+  const contract = PersonalSavings.bind(event.address);
   const goalData = contract.try_personalGoals(event.params.goalId);
   if (!goalData.reverted) {
     personalGoal.isYieldEnabled = goalData.value.getIsYieldEnabled();
@@ -106,7 +107,7 @@ export function handleGoalWithdrawn(event: GoalWithdrawnEvent): void {
   const personalGoal = PersonalGoal.load(Bytes.fromUTF8(goalEntityId));
   if (personalGoal) {
     // Check if goal is still active by contract call or currentAmount
-    const contract = PersonalSavingsV1.bind(event.address);
+    const contract = PersonalSavings.bind(event.address);
     const goalData = contract.try_personalGoals(event.params.goalId);
     if (!goalData.reverted) {
       personalGoal.isActive = goalData.value.getIsActive();
@@ -118,10 +119,16 @@ export function handleGoalWithdrawn(event: GoalWithdrawnEvent): void {
         personalGoal.isActive = false;
       }
     }
-    personalGoal.updatedAt = event.block.timestamp;
     personalGoal.save();
 
     goalWithdrawn.isActive = personalGoal.isActive;
+
+    // Track platform fees (penalty)
+    if (event.params.penalty.gt(BigInt.fromI32(0))) {
+      const settings = getOrCreatePersonalSavingsTokenSettings(event.params.token);
+      settings.totalPlatformFees = settings.totalPlatformFees.plus(event.params.penalty);
+      settings.save();
+    }
   } else {
     goalWithdrawn.isActive = false;
   }
@@ -142,6 +149,11 @@ export function handleYieldDistributed(event: YieldDistributedEvent): void {
   yieldDistributed.token = event.params.token;
   yieldDistributed.transaction = transaction.id;
 
+  // Track platform fees (share)
+  const settings = getOrCreatePersonalSavingsTokenSettings(event.params.token);
+  settings.totalPlatformFees = settings.totalPlatformFees.plus(event.params.platformShare);
+  settings.save();
+
   yieldDistributed.save();
 }
 
@@ -151,8 +163,16 @@ export function handleVaultUpdated(event: VaultUpdatedEvent): void {
   const vaultUpdated = new VaultUpdated(id);
   vaultUpdated.token = event.params.token;
   vaultUpdated.newVault = event.params.newVault;
+  vaultUpdated.projectName = event.params.project;
   vaultUpdated.contractType = "PERSONAL";
   vaultUpdated.transaction = transaction.id;
+
+  // Update token settings
+  const settings = getOrCreatePersonalSavingsTokenSettings(event.params.token);
+  settings.vault = event.params.newVault;
+  settings.projectName = event.params.project;
+  settings.save();
+
   vaultUpdated.save();
 }
 
@@ -163,6 +183,10 @@ export function handleTokenAdded(event: TokenAddedEvent): void {
   tokenAdded.token = event.params.token;
   tokenAdded.contractType = "PERSONAL";
   tokenAdded.transaction = transaction.id;
+
+  // Initialize token settings
+  getOrCreatePersonalSavingsTokenSettings(event.params.token);
+
   tokenAdded.save();
 }
 

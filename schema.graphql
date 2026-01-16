@@ -6,6 +6,23 @@ type Transaction @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
+type PersonalSavingsSystem @entity(immutable: false) {
+  id: Bytes! # "system"
+  treasury: Bytes! # address
+  reputationContract: Bytes! # address
+  supportedTokens: [PersonalSavingsTokenSettings!]!
+    @derivedFrom(field: "system")
+}
+
+type PersonalSavingsTokenSettings @entity(immutable: false) {
+  id: Bytes! # token address
+  system: PersonalSavingsSystem!
+  token: Bytes!
+  vault: Bytes # address
+  projectName: String # e.g. "AAVE"
+  totalPlatformFees: BigInt!
+}
+
 type User @entity(immutable: false) {
   id: Bytes!
   email: String! # string (unique via mapping)
@@ -34,6 +51,15 @@ type User @entity(immutable: false) {
   circlesCompleted: [CircleCompleted]! @derivedFrom(field: "user")
   profileUpdates: [ProfileUpdated!]! @derivedFrom(field: "user")
   contactInfoUpdates: [ContactInfoUpdated!]! @derivedFrom(field: "user")
+  # Referral fields
+  referredBy: User
+  referrals: [User!]! @derivedFrom(field: "referredBy")
+  referralCount: BigInt! # Successful referrals count
+  totalReferralRewardsEarned: BigInt! # uint256
+  pendingRewardsEarned: BigInt! # uint256
+  userReferred: [UserReferred!]! @derivedFrom(field: "user")
+  referralRewards: [ReferralRewardPaid!]! @derivedFrom(field: "referrer")
+  isReferralProcessed: Boolean! # true if this user's referral has been processed (first goal created)
 }
 
 #User Profile
@@ -57,6 +83,50 @@ type ContactInfoUpdated @entity(immutable: true) {
   email: String! # string
   phoneNumber: String! # string
   transaction: Transaction!
+}
+
+type UserReferred @entity(immutable: true) {
+  id: Bytes!
+  user: User!
+  referrer: User!
+  transaction: Transaction!
+}
+
+type ReferralRewardPaid @entity(immutable: true) {
+  id: Bytes!
+  referrer: User!
+  referee: User!
+  token: Bytes! # address
+  rewardAmount: BigInt! # uint256
+  transaction: Transaction!
+}
+
+type ReferralRewardPending @entity(immutable: true) {
+  id: Bytes!
+  referrer: User!
+  referee: User!
+  token: Bytes! # address
+  amount: BigInt! # uint256
+  transaction: Transaction!
+}
+
+type ReferralSystem @entity(immutable: false) {
+  id: Bytes! # "system"
+  rewardsEnabled: Boolean!
+  campaignMode: Boolean!
+  campaignStartTime: BigInt
+  campaignEndTime: BigInt
+  personalSavingsContract: Bytes!
+  supportedTokens: [ReferralTokenSettings!]! @derivedFrom(field: "system")
+}
+
+type ReferralTokenSettings @entity(immutable: false) {
+  id: Bytes! # token address
+  system: ReferralSystem!
+  token: Bytes!
+  bonusAmount: BigInt!
+  campaignBonusAmount: BigInt!
+  totalRewardsPaid: BigInt!
 }
 
 #User Reputation
@@ -137,6 +207,7 @@ type PersonalGoalCreated @entity(immutable: true) {
   deadline: BigInt! # uint256
   isActive: Boolean! # bool
   token: Bytes! # address
+  yieldAPY: BigInt! # uint256 (in basis points, 500 = 5%)
   transaction: Transaction!
 }
 
@@ -174,6 +245,7 @@ type VaultUpdated @entity(immutable: true) {
   id: Bytes!
   token: Bytes! # address
   newVault: Bytes! # address
+  projectName: String! # pool project name (e.g., "AAVE", "Compound")
   contractType: String! # "CIRCLE" or "PERSONAL"
   transaction: Transaction!
 }
@@ -236,6 +308,7 @@ type CircleCreated @entity(immutable: true) {
   circleCreatedAt: BigInt! # uint256
   token: Bytes! # address
   isYieldEnabled: Boolean! # bool
+  yieldAPY: BigInt! # uint256 (in basis points, 500 = 5%)
   transaction: Transaction!
 }
 
