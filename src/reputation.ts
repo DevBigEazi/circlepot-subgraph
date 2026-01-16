@@ -54,7 +54,8 @@ export function handleReputationDecreased(
 ): void {
   const transaction = createTransaction(event);
   const user = getOrCreateUser(event.params.user);
-  user.totalReputation = user.totalReputation.minus(event.params.points);
+  
+  user.totalReputation = event.params.newScore; 
 
   const reputationDecreased = new ReputationDecreased(event.transaction.hash);
   reputationDecreased.user = user.id;
@@ -71,7 +72,8 @@ export function handleReputationIncreased(
 ): void {
   const transaction = createTransaction(event);
   const user = getOrCreateUser(event.params.user);
-  user.totalReputation = user.totalReputation.plus(event.params.points);
+  
+  user.totalReputation = event.params.newScore; 
 
   const reputationIncreased = new ReputationIncreased(event.transaction.hash);
   reputationIncreased.user = user.id;

@@ -21,8 +21,6 @@ import {
   UserReferred,
   ReferralRewardPaid,
   ReferralRewardPending,
-  ReferralSystem,
-  ReferralTokenSettings,
 } from "../generated/schema";
 import {
   getOrCreateReferralSystem,
@@ -47,6 +45,7 @@ export function handleProfileCreated(event: ProfileCreatedEvent): void {
   user.photo = event.params.profilePhoto;
   user.createdAt = event.params.createdAt;
   user.hasProfile = event.params.hasProfile;
+  
 
   // Set original contact info flags
   user.emailIsOriginal = event.params.email.length > 0;
