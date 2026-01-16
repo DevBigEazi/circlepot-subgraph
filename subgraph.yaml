@@ -8,9 +8,9 @@ dataSources:
     name: UserProfileProxy
     network: celo-sepolia
     source:
-      address: "0xb889E7941472D91E364B3627F0abcAD306bf7cDD"
-      abi: UserProfileV1
-      startBlock: 13298814
+      address: "0xfC96B9b987b185C0c4fc3E3401e306d2DF49d902"
+      abi: UserProfile
+      startBlock: 15280907
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -18,22 +18,48 @@ dataSources:
       entities:
         - PhotoUpdated
         - ProfileCreated
+        - ProfileUpdated
+        - ContactInfoUpdated
       abis:
-        - name: UserProfileV1
-          file: ./abis/UserProfileV1.json
+        - name: UserProfile
+          file: ./abis/UserProfile.json
       eventHandlers:
-        - event: PhotoUpdated(indexed address,string)
-          handler: handlePhotoUpdated
-        - event: ProfileCreated(indexed address,string,string,string,uint256,string,uint256,bool)
+        - event: ProfileCreated(indexed address,string,string,string,string,uint256,string,uint256,bool)
           handler: handleProfileCreated
-      file: ./src/user-profile-v-1.ts
+        - event: ProfileUpdated(indexed address,string,string)
+          handler: handleProfileUpdated
+        - event: ContactInfoUpdated(indexed address,string,string)
+          handler: handleContactInfoUpdated
+        - event: UserReferred(indexed address,indexed address,uint256)
+          handler: handleUserReferred
+        - event: ReferralRewardPaid(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleReferralRewardPaid
+        - event: ReferralRewardPending(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleReferralRewardPending
+        - event: ReferralRewardsToggled(bool,uint256)
+          handler: handleReferralRewardsToggled
+        - event: ReferralBonusUpdated(indexed address,uint256,uint256,uint256)
+          handler: handleReferralBonusUpdated
+        - event: CampaignStarted(uint256,uint256)
+          handler: handleCampaignStarted
+        - event: CampaignBonusUpdated(indexed address,uint256,uint256)
+          handler: handleCampaignBonusUpdated
+        - event: CampaignEnded(uint256)
+          handler: handleCampaignEnded
+        - event: TokenAdded(indexed address)
+          handler: handleTokenAdded
+        - event: TokenRemoved(indexed address)
+          handler: handleTokenRemoved
+        - event: PersonalSavingsContractUpdated(indexed address)
+          handler: handlePersonalSavingsContractUpdated
+      file: ./src/user-profile.ts
   - kind: ethereum
     name: ReputationProxy
     network: celo-sepolia
     source:
-      address: "0xe3fA2Ed4F0047266bf905eFc3E9348409E76aECA"
-      abi: ReputationV1
-      startBlock: 13550343
+      address: "0x854B316F81ad5Ea70c479FCf32d67f7615fEc6a7"
+      abi: Reputation
+      startBlock: 15280907
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -46,8 +72,8 @@ dataSources:
         - ScoreCategoryChanged
         - GoalCompleted
       abis:
-        - name: ReputationV1
-          file: ./abis/ReputationV1.json
+        - name: Reputation
+          file: ./abis/Reputation.json
       eventHandlers:
         - event: ReputationIncreased(indexed address,uint256,string,uint256)
           handler: handleReputationIncreased
@@ -61,14 +87,14 @@ dataSources:
           handler: handleLatePaymentRecorded
         - event: GoalCompleted(indexed address,indexed uint256,uint256)
           handler: handleGoalCompleted
-      file: ./src/reputation-v-1.ts
+      file: ./src/reputation.ts
   - kind: ethereum
     name: PersonalSavingsProxy
     network: celo-sepolia
     source:
-      address: "0x27d68c08FF1630fD067A0551454cEAcdCa52c4c5"
-      abi: PersonalSavingsV1
-      startBlock: 13550343
+      address: "0x80dD110F922309db0114ad63D18742995B639C75"
+      abi: PersonalSavings
+      startBlock: 15280907
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -79,23 +105,31 @@ dataSources:
         - GoalContribution
         - GoalWithdrawn
       abis:
-        - name: PersonalSavingsV1
-          file: ./abis/PersonalSavingsV1.json
+        - name: PersonalSavings
+          file: ./abis/PersonalSavings.json
       eventHandlers:
-        - event: PersonalGoalCreated(indexed uint256,indexed address,string,indexed uint256,uint256,uint8,uint256,bool)
+        - event: PersonalGoalCreated(indexed uint256,indexed address,string,indexed uint256,uint256,uint8,uint256,bool,address,uint256)
           handler: handlePersonalGoalCreated
-        - event: GoalContribution(indexed uint256,indexed address,uint256,uint256)
+        - event: GoalContribution(indexed uint256,indexed address,uint256,uint256,address)
           handler: handleGoalContribution
-        - event: GoalWithdrawn(indexed uint256,indexed address,uint256,uint256)
+        - event: GoalWithdrawn(indexed uint256,indexed address,uint256,uint256,address)
           handler: handleGoalWithdrawn
-      file: ./src/personal-savings-v-1.ts
+        - event: YieldDistributed(indexed uint256,indexed address,uint256,uint256,address)
+          handler: handleYieldDistributed
+        - event: VaultUpdated(indexed address,indexed address,string)
+          handler: handleVaultUpdated
+        - event: TokenAdded(indexed address)
+          handler: handleTokenAdded
+        - event: TokenRemoved(indexed address)
+          handler: handleTokenRemoved
+      file: ./src/personal-savings.ts
   - kind: ethereum
     name: CircleSavingsProxy
     network: celo-sepolia
     source:
-      address: "0x983B11519aD1Ec28e60896C059221aB0023d4609"
-      abi: CircleSavingsV1
-      startBlock: 13550343
+      address: "0xceB735CF16d8Cc2F388F78f1139360A0A4594102"
+      abi: CircleSavings
+      startBlock: 15101888
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -117,22 +151,22 @@ dataSources:
         - CollateralReturned
         - DeadCircleFeeDeducted
       abis:
-        - name: CircleSavingsV1
-          file: ./abis/CircleSavingsV1.json
+        - name: CircleSavings
+          file: ./abis/CircleSavings.json
       eventHandlers:
         - event: VisibilityUpdated(indexed uint256,indexed address,uint8)
           handler: handleVisibilityUpdated
-        - event: CircleCreated(indexed uint256,string,string,indexed address,indexed uint256,uint8,uint256,uint8,uint256,uint256)
+        - event: CircleCreated(indexed uint256,string,string,indexed address,indexed uint256,uint8,uint256,uint8,uint256,uint256,address,uint256)
           handler: handleCircleCreated
         - event: CircleJoined(indexed uint256,indexed address,indexed uint256,uint8)
           handler: handleCircleJoined
         - event: CircleStarted(indexed uint256,uint256,uint8)
           handler: handleCircleStarted
-        - event: PayoutDistributed(indexed uint256,indexed uint256,indexed address,uint256)
+        - event: PayoutDistributed(indexed uint256,indexed uint256,indexed address,uint256,address)
           handler: handlePayoutDistributed
         - event: PositionAssigned(indexed uint256,indexed address,uint256)
           handler: handlePositionAssigned
-        - event: CollateralWithdrawn(indexed uint256,indexed address,uint256)
+        - event: CollateralWithdrawn(indexed uint256,indexed address,uint256,address)
           handler: handleCollateralWithdrawn
         - event: VotingInitiated(indexed uint256,indexed uint256,indexed uint256)
           handler: handleVotingInitiated
@@ -142,12 +176,28 @@ dataSources:
           handler: handleMemberInvited
         - event: VoteExecuted(indexed uint256,bool,uint256,uint256)
           handler: handleVoteExecuted
-        - event: ContributionMade(indexed uint256,uint256,address,indexed uint256)
+        - event: ContributionMade(indexed uint256,uint256,address,indexed uint256,address)
           handler: handleContributionMade
+        - event: LateContributionMade(indexed uint256,uint256,address,uint256,uint256,address)
+          handler: handleLateContributionMade
         - event: MemberForfeited(indexed uint256,uint256,address,indexed uint256,indexed address)
           handler: handleMemberForfeited
-        - event: CollateralReturned(indexed uint256,indexed address,indexed uint256)
+        - event: CollateralReturned(indexed uint256,indexed address,indexed uint256,address)
           handler: handleCollateralReturned
         - event: DeadCircleFeeDeducted(indexed uint256,indexed address,indexed uint256)
           handler: handleDeadCircleFeeDeducted
-      file: ./src/circle-savings-v-1.ts
+        - event: PointsAwarded(indexed uint256,indexed address,uint256,string)
+          handler: handlePointsAwarded
+        - event: YieldDistributed(indexed uint256,uint256,uint256,uint256)
+          handler: handleYieldDistributed
+        - event: LateFeeAddedToPool(indexed uint256,indexed address,uint256)
+          handler: handleLateFeeAddedToPool
+        - event: MemberRewardClaimed(indexed uint256,indexed address,uint256)
+          handler: handleMemberRewardClaimed
+        - event: VaultUpdated(indexed address,indexed address,string)
+          handler: handleVaultUpdated
+        - event: TokenAdded(indexed address)
+          handler: handleTokenAdded
+        - event: TokenRemoved(indexed address)
+          handler: handleTokenRemoved
+      file: ./src/circle-savings.ts

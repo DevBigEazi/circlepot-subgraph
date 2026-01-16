@@ -280,13 +280,13 @@
       },
       {
         "indexed": false,
-        "internalType": "enum ReputationV1.ScoreCategory",
+        "internalType": "enum Reputation.ScoreCategory",
         "name": "oldCategory",
         "type": "uint8"
       },
       {
         "indexed": false,
-        "internalType": "enum ReputationV1.ScoreCategory",
+        "internalType": "enum Reputation.ScoreCategory",
         "name": "newCategory",
         "type": "uint8"
       }
@@ -476,7 +476,7 @@
           { "internalType": "string", "name": "reason", "type": "string" },
           { "internalType": "uint256", "name": "newScore", "type": "uint256" }
         ],
-        "internalType": "struct ReputationV1.ReputationHistory[]",
+        "internalType": "struct Reputation.ReputationHistory[]",
         "name": "",
         "type": "tuple[]"
       }
@@ -491,7 +491,7 @@
     "name": "getScoreCategory",
     "outputs": [
       {
-        "internalType": "enum ReputationV1.ScoreCategory",
+        "internalType": "enum Reputation.ScoreCategory",
         "name": "",
         "type": "uint8"
       }
@@ -542,7 +542,7 @@
     "outputs": [
       { "internalType": "uint256", "name": "score", "type": "uint256" },
       {
-        "internalType": "enum ReputationV1.ScoreCategory",
+        "internalType": "enum Reputation.ScoreCategory",
         "name": "category",
         "type": "uint8"
       },

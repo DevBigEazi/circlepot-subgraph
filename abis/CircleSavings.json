@@ -61,6 +61,8 @@
   },
   { "inputs": [], "name": "SameVisibility", "type": "error" },
   { "inputs": [], "name": "TitleTooShortOrLong", "type": "error" },
+  { "inputs": [], "name": "TokenAlreadySupported", "type": "error" },
+  { "inputs": [], "name": "TokenNotSupported", "type": "error" },
   { "inputs": [], "name": "UUPSUnauthorizedCallContext", "type": "error" },
   {
     "inputs": [
@@ -71,6 +73,7 @@
   },
   { "inputs": [], "name": "UltimatumNotPassed", "type": "error" },
   { "inputs": [], "name": "UltimatumNotReached", "type": "error" },
+  { "inputs": [], "name": "UnsupportedToken", "type": "error" },
   { "inputs": [], "name": "VoteAlreadyExecuted", "type": "error" },
   { "inputs": [], "name": "VotingAlreadyExecuted", "type": "error" },
   { "inputs": [], "name": "VotingNotActive", "type": "error" },
@@ -111,7 +114,7 @@
       },
       {
         "indexed": false,
-        "internalType": "enum CircleSavingsV1.Frequency",
+        "internalType": "enum CircleSavings.Frequency",
         "name": "frequency",
         "type": "uint8"
       },
@@ -123,7 +126,7 @@
       },
       {
         "indexed": false,
-        "internalType": "enum CircleSavingsV1.Visibility",
+        "internalType": "enum CircleSavings.Visibility",
         "name": "visibility",
         "type": "uint8"
       },
@@ -137,6 +140,18 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "collateralLocked",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "yieldAPY",
         "type": "uint256"
       }
     ],
@@ -166,7 +181,7 @@
       },
       {
         "indexed": false,
-        "internalType": "enum CircleSavingsV1.CircleState",
+        "internalType": "enum CircleSavings.CircleState",
         "name": "state",
         "type": "uint8"
       }
@@ -191,7 +206,7 @@
       },
       {
         "indexed": false,
-        "internalType": "enum CircleSavingsV1.CircleState",
+        "internalType": "enum CircleSavings.CircleState",
         "name": "state",
         "type": "uint8"
       }
@@ -219,6 +234,12 @@
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
       }
     ],
     "name": "CollateralReturned",
@@ -244,6 +265,12 @@
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
       }
     ],
     "name": "CollateralWithdrawn",
@@ -294,6 +321,12 @@
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
       }
     ],
     "name": "ContributionMade",
@@ -335,6 +368,74 @@
       }
     ],
     "name": "Initialized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "circleId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "round",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "member",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "LateContributionMade",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "circleId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "member",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "LateFeeAddedToPool",
     "type": "event"
   },
   {
@@ -410,6 +511,31 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "uint256",
+        "name": "circleId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "member",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "rewardAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "MemberRewardClaimed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "previousOwner",
         "type": "address"
@@ -450,9 +576,46 @@
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
       }
     ],
     "name": "PayoutDistributed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "circleId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "member",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "points",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "reason",
+        "type": "string"
+      }
+    ],
+    "name": "PointsAwarded",
     "type": "event"
   },
   {
@@ -499,11 +662,62 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "TokenAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "TokenRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "implementation",
         "type": "address"
       }
     ],
     "name": "Upgraded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newVault",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "project",
+        "type": "string"
+      }
+    ],
+    "name": "VaultUpdated",
     "type": "event"
   },
   {
@@ -523,7 +737,7 @@
       },
       {
         "indexed": false,
-        "internalType": "enum CircleSavingsV1.Visibility",
+        "internalType": "enum CircleSavings.Visibility",
         "name": "newVisibility",
         "type": "uint8"
       }
@@ -548,7 +762,7 @@
       },
       {
         "indexed": false,
-        "internalType": "enum CircleSavingsV1.VoteChoice",
+        "internalType": "enum CircleSavings.VoteChoice",
         "name": "choice",
         "type": "uint8"
       }
@@ -613,6 +827,37 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "circleId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalSurplus",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "platformShare",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "communityShare",
+        "type": "uint256"
+      }
+    ],
+    "name": "YieldDistributed",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "FIXED_FEE_AMOUNT",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
@@ -664,6 +909,13 @@
   {
     "inputs": [],
     "name": "PLATFORM_FEE_BPS",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PLATFORM_YIELD_SHARE_BPS",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
@@ -729,7 +981,7 @@
   {
     "inputs": [
       {
-        "internalType": "enum CircleSavingsV1.Frequency",
+        "internalType": "enum CircleSavings.Frequency",
         "name": "f",
         "type": "uint8"
       }
@@ -740,10 +992,12 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "cUSDToken",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
+    "inputs": [
+      { "internalType": "address", "name": "_token", "type": "address" }
+    ],
+    "name": "addSupportedToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -759,7 +1013,7 @@
     "inputs": [
       { "internalType": "uint256", "name": "_circleId", "type": "uint256" },
       {
-        "internalType": "enum CircleSavingsV1.VoteChoice",
+        "internalType": "enum CircleSavings.VoteChoice",
         "name": "_choice",
         "type": "uint8"
       }
@@ -767,6 +1021,36 @@
     "name": "castVote",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "circleConfigs",
+    "outputs": [
+      { "internalType": "uint256", "name": "circleId", "type": "uint256" },
+      { "internalType": "string", "name": "title", "type": "string" },
+      { "internalType": "string", "name": "description", "type": "string" },
+      { "internalType": "address", "name": "creator", "type": "address" },
+      {
+        "internalType": "uint256",
+        "name": "contributionAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum CircleSavings.Frequency",
+        "name": "frequency",
+        "type": "uint8"
+      },
+      { "internalType": "uint256", "name": "maxMembers", "type": "uint256" },
+      {
+        "internalType": "enum CircleSavings.Visibility",
+        "name": "visibility",
+        "type": "uint8"
+      },
+      { "internalType": "uint256", "name": "createdAt", "type": "uint256" },
+      { "internalType": "bool", "name": "isYieldEnabled", "type": "bool" }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -783,6 +1067,13 @@
     ],
     "name": "circleInvitations",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "circleLateFeePool",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -816,7 +1107,12 @@
         "name": "collateralLocked",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "joinedAt", "type": "uint256" }
+      { "internalType": "uint256", "name": "joinedAt", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "performancePoints",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -828,6 +1124,47 @@
     ],
     "name": "circleRoundDeadlines",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "circleShares",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "circleStatus",
+    "outputs": [
+      {
+        "internalType": "enum CircleSavings.CircleState",
+        "name": "state",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "currentMembers",
+        "type": "uint256"
+      },
+      { "internalType": "uint256", "name": "currentRound", "type": "uint256" },
+      { "internalType": "uint256", "name": "totalRounds", "type": "uint256" },
+      { "internalType": "uint256", "name": "startedAt", "type": "uint256" },
+      { "internalType": "uint256", "name": "totalPot", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "contributionsThisRound",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "circleToken",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -852,50 +1189,12 @@
         "type": "uint256"
       },
       { "internalType": "bool", "name": "votingActive", "type": "bool" },
-      { "internalType": "bool", "name": "voteExecuted", "type": "bool" }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "name": "circles",
-    "outputs": [
-      { "internalType": "uint256", "name": "circleId", "type": "uint256" },
-      { "internalType": "string", "name": "title", "type": "string" },
-      { "internalType": "string", "name": "description", "type": "string" },
-      { "internalType": "address", "name": "creator", "type": "address" },
+      { "internalType": "bool", "name": "voteExecuted", "type": "bool" },
       {
         "internalType": "uint256",
-        "name": "contributionAmount",
+        "name": "totalEligibleVoters",
         "type": "uint256"
-      },
-      {
-        "internalType": "enum CircleSavingsV1.Frequency",
-        "name": "frequency",
-        "type": "uint8"
-      },
-      { "internalType": "uint256", "name": "maxMembers", "type": "uint256" },
-      {
-        "internalType": "uint256",
-        "name": "currentMembers",
-        "type": "uint256"
-      },
-      { "internalType": "uint256", "name": "currentRound", "type": "uint256" },
-      { "internalType": "uint256", "name": "totalRounds", "type": "uint256" },
-      {
-        "internalType": "enum CircleSavingsV1.CircleState",
-        "name": "state",
-        "type": "uint8"
-      },
-      {
-        "internalType": "enum CircleSavingsV1.Visibility",
-        "name": "visibility",
-        "type": "uint8"
-      },
-      { "internalType": "uint256", "name": "createdAt", "type": "uint256" },
-      { "internalType": "uint256", "name": "startedAt", "type": "uint256" },
-      { "internalType": "uint256", "name": "totalPot", "type": "uint256" }
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -921,7 +1220,7 @@
             "type": "uint256"
           },
           {
-            "internalType": "enum CircleSavingsV1.Frequency",
+            "internalType": "enum CircleSavings.Frequency",
             "name": "frequency",
             "type": "uint8"
           },
@@ -931,12 +1230,15 @@
             "type": "uint256"
           },
           {
-            "internalType": "enum CircleSavingsV1.Visibility",
+            "internalType": "enum CircleSavings.Visibility",
             "name": "visibility",
             "type": "uint8"
-          }
+          },
+          { "internalType": "bool", "name": "enableYield", "type": "bool" },
+          { "internalType": "address", "name": "token", "type": "address" },
+          { "internalType": "uint256", "name": "yieldAPY", "type": "uint256" }
         ],
-        "internalType": "struct CircleSavingsV1.CreateCircleParams",
+        "internalType": "struct CircleSavings.CreateCircleParams",
         "name": "params",
         "type": "tuple"
       }
@@ -964,7 +1266,12 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
+      { "internalType": "uint256", "name": "_circleId", "type": "uint256" },
+      {
+        "internalType": "address[]",
+        "name": "_membersToForfeit",
+        "type": "address[]"
+      }
     ],
     "name": "forfeitMember",
     "outputs": [],
@@ -989,7 +1296,7 @@
             "type": "uint256"
           },
           {
-            "internalType": "enum CircleSavingsV1.Frequency",
+            "internalType": "enum CircleSavings.Frequency",
             "name": "frequency",
             "type": "uint8"
           },
@@ -997,6 +1304,25 @@
             "internalType": "uint256",
             "name": "maxMembers",
             "type": "uint256"
+          },
+          {
+            "internalType": "enum CircleSavings.Visibility",
+            "name": "visibility",
+            "type": "uint8"
+          },
+          { "internalType": "uint256", "name": "createdAt", "type": "uint256" },
+          { "internalType": "bool", "name": "isYieldEnabled", "type": "bool" }
+        ],
+        "internalType": "struct CircleSavings.CircleConfig",
+        "name": "config",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "enum CircleSavings.CircleState",
+            "name": "state",
+            "type": "uint8"
           },
           {
             "internalType": "uint256",
@@ -1013,25 +1339,18 @@
             "name": "totalRounds",
             "type": "uint256"
           },
-          {
-            "internalType": "enum CircleSavingsV1.CircleState",
-            "name": "state",
-            "type": "uint8"
-          },
-          {
-            "internalType": "enum CircleSavingsV1.Visibility",
-            "name": "visibility",
-            "type": "uint8"
-          },
-          { "internalType": "uint256", "name": "createdAt", "type": "uint256" },
           { "internalType": "uint256", "name": "startedAt", "type": "uint256" },
-          { "internalType": "uint256", "name": "totalPot", "type": "uint256" }
+          { "internalType": "uint256", "name": "totalPot", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "contributionsThisRound",
+            "type": "uint256"
+          }
         ],
-        "internalType": "struct CircleSavingsV1.Circle",
-        "name": "circle",
+        "internalType": "struct CircleSavings.CircleStatus",
+        "name": "status",
         "type": "tuple"
       },
-      { "internalType": "uint256", "name": "membersJoined", "type": "uint256" },
       {
         "internalType": "uint256",
         "name": "currentDeadline",
@@ -1066,8 +1385,19 @@
         "name": "contributionsThisRound",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "totalMembers", "type": "uint256" }
+      { "internalType": "uint256", "name": "totalMembers", "type": "uint256" },
+      { "internalType": "uint256", "name": "lateFeePool", "type": "uint256" },
+      { "internalType": "uint256", "name": "totalPoints", "type": "uint256" }
     ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
+    ],
+    "name": "getCircleToken",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -1097,9 +1427,14 @@
             "name": "collateralLocked",
             "type": "uint256"
           },
-          { "internalType": "uint256", "name": "joinedAt", "type": "uint256" }
+          { "internalType": "uint256", "name": "joinedAt", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "performancePoints",
+            "type": "uint256"
+          }
         ],
-        "internalType": "struct CircleSavingsV1.Member",
+        "internalType": "struct CircleSavings.Member",
         "name": "memberInfo",
         "type": "tuple"
       },
@@ -1115,11 +1450,18 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_user", "type": "address" }
+      { "internalType": "address", "name": "_token", "type": "address" }
     ],
-    "name": "getUserCircles",
+    "name": "getPlatformFees",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getSupportedTokens",
     "outputs": [
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+      { "internalType": "address[]", "name": "", "type": "address[]" }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -1144,7 +1486,7 @@
       { "internalType": "bool", "name": "votingActive", "type": "bool" },
       { "internalType": "bool", "name": "voteExecuted", "type": "bool" },
       {
-        "internalType": "enum CircleSavingsV1.VoteChoice",
+        "internalType": "enum CircleSavings.VoteChoice",
         "name": "userVote",
         "type": "uint8"
       }
@@ -1154,7 +1496,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_cUSDToken", "type": "address" },
+      {
+        "internalType": "address[]",
+        "name": "_supportedTokens",
+        "type": "address[]"
+      },
       { "internalType": "address", "name": "_treasury", "type": "address" },
       {
         "internalType": "address",
@@ -1199,6 +1545,15 @@
   },
   {
     "inputs": [
+      { "internalType": "address", "name": "_token", "type": "address" }
+    ],
+    "name": "isSupportedToken",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
       { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
     ],
     "name": "joinCircle",
@@ -1214,7 +1569,7 @@
     "name": "memberVotes",
     "outputs": [
       {
-        "internalType": "enum CircleSavingsV1.VoteChoice",
+        "internalType": "enum CircleSavings.VoteChoice",
         "name": "",
         "type": "uint8"
       }
@@ -1237,10 +1592,26 @@
     "type": "function"
   },
   {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "platformFeesByToken",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "proxiableUUID",
     "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_token", "type": "address" }
+    ],
+    "name": "removeSupportedToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1279,16 +1650,39 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
+      { "internalType": "address", "name": "_token", "type": "address" },
+      { "internalType": "address", "name": "_vault", "type": "address" },
+      { "internalType": "string", "name": "_project", "type": "string" }
     ],
-    "name": "startCircle",
+    "name": "setTokenVault",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "totalPlatformFees",
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "supportedTokenList",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "supportedTokens",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "tokenVaults",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "totalCirclePoints",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
@@ -1313,7 +1707,7 @@
     "inputs": [
       { "internalType": "uint256", "name": "_circleId", "type": "uint256" },
       {
-        "internalType": "enum CircleSavingsV1.Visibility",
+        "internalType": "enum CircleSavings.Visibility",
         "name": "_newVisibility",
         "type": "uint8"
       }
@@ -1356,7 +1750,6 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_cUSDToken", "type": "address" },
       { "internalType": "address", "name": "_treasury", "type": "address" },
       {
         "internalType": "address",
@@ -1392,7 +1785,9 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      { "internalType": "address", "name": "_token", "type": "address" }
+    ],
     "name": "withdrawPlatformFees",
     "outputs": [],
     "stateMutability": "nonpayable",

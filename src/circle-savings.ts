@@ -12,11 +12,20 @@ import {
     MemberInvited as MemberInvitedEvent,
     VoteExecuted as VoteExecutedEvent,
     ContributionMade as ContributionMadeEvent,
+    LateContributionMade as LateContributionMadeEvent,
     MemberForfeited as MemberForfeitedEvent,
     CollateralReturned as CollateralReturnedEvent,
     DeadCircleFeeDeducted as DeadCircleFeeDeductedEvent,
-} from "../generated/CircleSavingsProxy/CircleSavingsV1"
-import { Circle, CircleCreated, CircleJoined, CircleStarted, CollateralReturned, CollateralWithdrawn, ContributionMade, DeadCircleFeeDeducted, MemberForfeited, MemberInvited, PayoutDistributed, PositionAssigned, VisibilityUpdated, VoteCast, VoteExecuted, VotingInitiated } from "../generated/schema";
+    PointsAwarded as PointsAwardedEvent,
+    YieldDistributed as YieldDistributedEvent,
+    LateFeeAddedToPool as LateFeeAddedToPoolEvent,
+    MemberRewardClaimed as MemberRewardClaimedEvent,
+    VaultUpdated as VaultUpdatedEvent,
+    TokenAdded as TokenAddedEvent,
+    TokenRemoved as TokenRemovedEvent,
+} from "../generated/CircleSavingsProxy/CircleSavings"
+import { Circle, CircleCreated, CircleJoined, CircleStarted, CollateralReturned, CollateralWithdrawn, ContributionMade, DeadCircleFeeDeducted, MemberForfeited, MemberInvited, PayoutDistributed, PositionAssigned, VisibilityUpdated, VoteCast, VoteExecuted, VotingInitiated, LateContributionMade, PointsAwarded, CircleYieldDistributed, LateFeeAddedToPool, MemberRewardClaimed, VaultUpdated, TokenAdded, TokenRemoved } from "../generated/schema";
+import { CircleSavings } from "../generated/CircleSavingsProxy/CircleSavings";
 import { createTransaction, getOrCreateUser } from "./utils"
 
 export function handleCircleCreated(event: CircleCreatedEvent): void {
@@ -35,6 +44,8 @@ export function handleCircleCreated(event: CircleCreatedEvent): void {
     circleCreated.circleMaxMembers = event.params.maxMembers;
     circleCreated.circleVisibility = event.params.visibility;
     circleCreated.circleCreatedAt = event.params.createdAt;
+    circleCreated.token = event.params.token;
+    circleCreated.yieldAPY = event.params.yieldAPY;
     circleCreated.transaction = transaction.id;
 
     // Create the mutable Circle state entity
@@ -55,6 +66,21 @@ export function handleCircleCreated(event: CircleCreatedEvent): void {
     circle.createdAt = event.params.createdAt;
     circle.startedAt = BigInt.fromI32(0);
     circle.updatedAt = event.block.timestamp;
+    circle.token = event.params.token;
+    circle.lateFeePool = BigInt.fromI32(0);
+    circle.totalPoints = BigInt.fromI32(0);
+    circle.totalPot = BigInt.fromI32(0);
+    circle.contributionsThisRound = BigInt.fromI32(0);
+
+    const contract = CircleSavings.bind(event.address);
+    const configResult = contract.try_circleConfigs(event.params.circleId);
+    if (!configResult.reverted) {
+        circle.isYieldEnabled = configResult.value.getIsYieldEnabled();
+        circleCreated.isYieldEnabled = configResult.value.getIsYieldEnabled();
+    } else {
+        circle.isYieldEnabled = false;
+        circleCreated.isYieldEnabled = false;
+    }
 
     circleCreated.save();
     circle.save();
@@ -118,6 +144,7 @@ export function handlePayoutDistributed(event: PayoutDistributedEvent): void {
     payoutDistributed.circleId = event.params.circleId;
     payoutDistributed.round = event.params.round;
     payoutDistributed.payoutAmount = event.params.amount
+    payoutDistributed.token = event.params.token;
     payoutDistributed.transaction = transaction.id;
 
     // Increment the circle's currentRound
@@ -134,6 +161,8 @@ export function handlePayoutDistributed(event: PayoutDistributedEvent): void {
             // Ensure currentRound reflects the final round (stays at maxMembers)
             circle.currentRound = circle.maxMembers;
         }
+        circle.totalPot = BigInt.fromI32(0);
+        circle.contributionsThisRound = BigInt.fromI32(0);
         circle.updatedAt = event.block.timestamp;
         circle.save();
     }
@@ -149,7 +178,7 @@ export function handlePositionAssigned(event: PositionAssignedEvent): void {
     const id = event.transaction.hash
         .concatI32(event.logIndex.toI32())
         .concat(event.params.member);
-    
+
     const positionAssigned = new PositionAssigned(id); // ✅ UNIQUE ID
     positionAssigned.user = user.id;
     positionAssigned.circleId = event.params.circleId;
@@ -167,6 +196,7 @@ export function handleCollateralWithdrawn(event: CollateralWithdrawnEvent): void
     collateralWithdrawn.user = user.id;
     collateralWithdrawn.circleId = event.params.circleId;
     collateralWithdrawn.amount = event.params.amount;
+    collateralWithdrawn.token = event.params.token;
     collateralWithdrawn.transaction = transaction.id;
 
     const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
@@ -240,10 +270,10 @@ export function handleVoteExecuted(event: VoteExecutedEvent): void {
 
     // Calculate if withdraw won
     const totalVotes = event.params.startVoteCount.plus(event.params.withdrawVoteCount);
-    const withdrawWon = totalVotes.gt(BigInt.fromI32(0)) 
+    const withdrawWon = totalVotes.gt(BigInt.fromI32(0))
         ? event.params.startVoteCount.times(BigInt.fromI32(10000)).div(totalVotes).lt(BigInt.fromI32(5100))
         : false;
-    
+
     voteExecuted.withdrawWon = withdrawWon;
 
     // Update Circle entity state back to CREATED after vote
@@ -252,11 +282,11 @@ export function handleVoteExecuted(event: VoteExecutedEvent): void {
     if (circle) {
         circle.state = 1; // Back to CREATED after vote execution
         circle.updatedAt = event.block.timestamp;
-        
+
         // Store vote result
         circle.voteWithdrawWon = withdrawWon;
         circle.lastVoteExecuted = voteExecuted.id;
-        
+
         circle.save();
     }
 
@@ -272,9 +302,19 @@ export function handleContributionMade(event: ContributionMadeEvent): void {
     contributionMade.circleId = event.params.circleId;
     contributionMade.round = event.params.round
     contributionMade.amount = event.params.amount;
+    contributionMade.token = event.params.token;
     contributionMade.transaction = transaction.id;
 
     contributionMade.save();
+
+    const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
+    const circle = Circle.load(circleId);
+    if (circle) {
+        circle.totalPot = circle.totalPot.plus(event.params.amount);
+        circle.contributionsThisRound = circle.contributionsThisRound.plus(BigInt.fromI32(1));
+        circle.updatedAt = event.block.timestamp;
+        circle.save();
+    }
 }
 
 export function handleMemberForfeited(event: MemberForfeitedEvent): void {
@@ -285,7 +325,7 @@ export function handleMemberForfeited(event: MemberForfeitedEvent): void {
     const id = event.transaction.hash
         .concatI32(event.logIndex.toI32())
         .concat(event.params.member);
-    
+
     const memberForfeited = new MemberForfeited(id); // ✅ UNIQUE ID
     memberForfeited.forfeiter = user.id;
     memberForfeited.circleId = event.params.circleId;
@@ -295,6 +335,19 @@ export function handleMemberForfeited(event: MemberForfeitedEvent): void {
     memberForfeited.transaction = transaction.id;
 
     memberForfeited.save();
+
+    const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
+    const circle = Circle.load(circleId);
+    if (circle) {
+        const toPot = event.params.deduction.gt(circle.contributionAmount)
+            ? circle.contributionAmount
+            : event.params.deduction;
+
+        circle.totalPot = circle.totalPot.plus(toPot);
+        circle.contributionsThisRound = circle.contributionsThisRound.plus(BigInt.fromI32(1));
+        circle.updatedAt = event.block.timestamp;
+        circle.save();
+    }
 }
 
 export function handleVisibilityUpdated(event: VisibilityUpdatedEvent): void {
@@ -325,11 +378,12 @@ export function handleCollateralReturned(event: CollateralReturnedEvent): void {
     const id = event.transaction.hash
         .concatI32(event.logIndex.toI32())
         .concat(event.params.member);
-    
+
     const collateralReturned = new CollateralReturned(id); // ✅ UNIQUE ID
     collateralReturned.user = user.id;
     collateralReturned.circleId = event.params.circleId;
     collateralReturned.amount = event.params.amount;
+    collateralReturned.token = event.params.token;
     collateralReturned.transaction = transaction.id;
 
     collateralReturned.save();
@@ -347,4 +401,134 @@ export function handleDeadCircleFeeDeducted(event: DeadCircleFeeDeductedEvent): 
 
     deadCircleFeeDeducted.save();
 }
-    
+
+export function handleLateContributionMade(event: LateContributionMadeEvent): void {
+    const transaction = createTransaction(event);
+    const user = getOrCreateUser(event.params.member);
+
+    const lateContributionMade = new LateContributionMade(event.transaction.hash);
+    lateContributionMade.user = user.id;
+    lateContributionMade.circleId = event.params.circleId;
+    lateContributionMade.round = event.params.round;
+    lateContributionMade.amount = event.params.amount;
+    lateContributionMade.fee = event.params.fee;
+    lateContributionMade.token = event.params.token;
+    lateContributionMade.transaction = transaction.id;
+
+    lateContributionMade.save();
+
+    const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
+    const circle = Circle.load(circleId);
+    if (circle) {
+        circle.totalPot = circle.totalPot.plus(event.params.amount);
+        circle.contributionsThisRound = circle.contributionsThisRound.plus(BigInt.fromI32(1));
+        circle.updatedAt = event.block.timestamp;
+        circle.save();
+    }
+}
+
+export function handlePointsAwarded(event: PointsAwardedEvent): void {
+    const transaction = createTransaction(event);
+    const user = getOrCreateUser(event.params.member);
+
+    const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+    const pointsAwarded = new PointsAwarded(id);
+    pointsAwarded.user = user.id;
+    pointsAwarded.circleId = event.params.circleId;
+    pointsAwarded.points = event.params.points;
+    pointsAwarded.reason = event.params.reason;
+    pointsAwarded.transaction = transaction.id;
+
+    // Update Circle total points
+    const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
+    const circle = Circle.load(circleId);
+    if (circle) {
+        circle.totalPoints = circle.totalPoints.plus(event.params.points);
+        circle.updatedAt = event.block.timestamp;
+        circle.save();
+    }
+
+    pointsAwarded.save();
+}
+
+export function handleYieldDistributed(event: YieldDistributedEvent): void {
+    const transaction = createTransaction(event);
+
+    const yieldDistributed = new CircleYieldDistributed(event.transaction.hash);
+    yieldDistributed.circleId = event.params.circleId;
+    yieldDistributed.totalSurplus = event.params.totalSurplus;
+    yieldDistributed.platformShare = event.params.platformShare;
+    yieldDistributed.communityShare = event.params.communityShare;
+    yieldDistributed.transaction = transaction.id;
+
+    yieldDistributed.save();
+}
+
+export function handleLateFeeAddedToPool(event: LateFeeAddedToPoolEvent): void {
+    const transaction = createTransaction(event);
+    const user = getOrCreateUser(event.params.member);
+
+    const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+    const lateFeeAddedToPool = new LateFeeAddedToPool(id);
+    lateFeeAddedToPool.user = user.id;
+    lateFeeAddedToPool.circleId = event.params.circleId;
+    lateFeeAddedToPool.amount = event.params.amount;
+    lateFeeAddedToPool.transaction = transaction.id;
+
+    // Update Circle late fee pool
+    const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
+    const circle = Circle.load(circleId);
+    if (circle) {
+        circle.lateFeePool = circle.lateFeePool.plus(event.params.amount);
+        circle.updatedAt = event.block.timestamp;
+        circle.save();
+    }
+
+    lateFeeAddedToPool.save();
+}
+
+export function handleMemberRewardClaimed(event: MemberRewardClaimedEvent): void {
+    const transaction = createTransaction(event);
+    const user = getOrCreateUser(event.params.member);
+
+    const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+    const memberRewardClaimed = new MemberRewardClaimed(id);
+    memberRewardClaimed.user = user.id;
+    memberRewardClaimed.circleId = event.params.circleId;
+    memberRewardClaimed.rewardAmount = event.params.rewardAmount;
+    memberRewardClaimed.transaction = transaction.id;
+
+    memberRewardClaimed.save();
+}
+
+export function handleVaultUpdated(event: VaultUpdatedEvent): void {
+    const transaction = createTransaction(event);
+    const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+    const vaultUpdated = new VaultUpdated(id);
+    vaultUpdated.token = event.params.token;
+    vaultUpdated.newVault = event.params.newVault;
+    vaultUpdated.projectName = event.params.project;
+    vaultUpdated.contractType = "CIRCLE";
+    vaultUpdated.transaction = transaction.id;
+    vaultUpdated.save();
+}
+
+export function handleTokenAdded(event: TokenAddedEvent): void {
+    const transaction = createTransaction(event);
+    const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+    const tokenAdded = new TokenAdded(id);
+    tokenAdded.token = event.params.token;
+    tokenAdded.contractType = "CIRCLE";
+    tokenAdded.transaction = transaction.id;
+    tokenAdded.save();
+}
+
+export function handleTokenRemoved(event: TokenRemovedEvent): void {
+    const transaction = createTransaction(event);
+    const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+    const tokenRemoved = new TokenRemoved(id);
+    tokenRemoved.token = event.params.token;
+    tokenRemoved.contractType = "CIRCLE";
+    tokenRemoved.transaction = transaction.id;
+    tokenRemoved.save();
+}
