@@ -97,7 +97,7 @@ type UserReferred @entity(immutable: true) {
 type ReferralRewardPaid @entity(immutable: true) {
   id: Bytes!
   referrer: User!
-  referee: User!
+  referee: User
   token: Bytes! # address
   rewardAmount: BigInt! # uint256
   transaction: Transaction!
@@ -106,7 +106,7 @@ type ReferralRewardPaid @entity(immutable: true) {
 type ReferralRewardPending @entity(immutable: true) {
   id: Bytes!
   referrer: User!
-  referee: User!
+  referee: User
   token: Bytes! # address
   amount: BigInt! # uint256
   transaction: Transaction!
