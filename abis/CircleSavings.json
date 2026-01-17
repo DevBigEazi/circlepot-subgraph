@@ -209,6 +209,12 @@
         "internalType": "enum CircleSavings.CircleState",
         "name": "state",
         "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "roundDeadline",
+        "type": "uint256"
       }
     ],
     "name": "CircleStarted",
@@ -582,6 +588,12 @@
         "internalType": "address",
         "name": "token",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "nextRoundDeadline",
+        "type": "uint256"
       }
     ],
     "name": "PayoutDistributed",

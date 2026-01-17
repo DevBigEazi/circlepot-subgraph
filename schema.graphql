@@ -291,6 +291,7 @@ type Circle @entity(immutable: false) {
   totalPoints: BigInt! # uint256
   totalPot: BigInt! # uint256
   contributionsThisRound: BigInt! # uint256
+  nextDeadline: BigInt # uint256
 }
 
 # Immutable event for circle creation
@@ -326,6 +327,7 @@ type CircleStarted @entity(immutable: true) {
   id: Bytes!
   circleId: BigInt! # uint256
   circleStartedAt: BigInt! # uint256
+  roundDeadline: BigInt! # uint256
   transaction: Transaction!
 }
 
@@ -396,6 +398,7 @@ type PayoutDistributed @entity(immutable: true) {
   round: BigInt! # uint256
   payoutAmount: BigInt! # uint256
   token: Bytes! # address
+  nextRoundDeadline: BigInt! # uint256
   transaction: Transaction!
 }
 

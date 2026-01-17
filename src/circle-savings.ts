@@ -119,6 +119,7 @@ export function handleCircleStarted(event: CircleStartedEvent): void {
     const circleStarted = new CircleStarted(event.transaction.hash);
     circleStarted.circleId = event.params.circleId;
     circleStarted.circleStartedAt = event.params.startedAt;
+    circleStarted.roundDeadline = event.params.roundDeadline;
     circleStarted.transaction = transaction.id;
 
     // Update the mutable Circle entity
@@ -128,6 +129,7 @@ export function handleCircleStarted(event: CircleStartedEvent): void {
         circle.state = event.params.state; // 1 = Active
         circle.currentRound = BigInt.fromI32(1); //  First round starts
         circle.startedAt = event.params.startedAt;
+        circle.nextDeadline = event.params.roundDeadline;
         circle.updatedAt = event.block.timestamp;
         circle.save();
     }
@@ -145,6 +147,7 @@ export function handlePayoutDistributed(event: PayoutDistributedEvent): void {
     payoutDistributed.round = event.params.round;
     payoutDistributed.payoutAmount = event.params.amount
     payoutDistributed.token = event.params.token;
+    payoutDistributed.nextRoundDeadline = event.params.nextRoundDeadline;
     payoutDistributed.transaction = transaction.id;
 
     // Increment the circle's currentRound
@@ -155,11 +158,13 @@ export function handlePayoutDistributed(event: PayoutDistributedEvent): void {
         // If round == totalRounds, the circle is completed.
         if (event.params.round.lt(circle.maxMembers)) {
             circle.currentRound = event.params.round.plus(BigInt.fromI32(1));
+            circle.nextDeadline = event.params.nextRoundDeadline;
         } else {
             // Circle is completed
             circle.state = 4; // CircleState.COMPLETED
             // Ensure currentRound reflects the final round (stays at maxMembers)
             circle.currentRound = circle.maxMembers;
+            circle.nextDeadline = null;
         }
         circle.totalPot = BigInt.fromI32(0);
         circle.contributionsThisRound = BigInt.fromI32(0);

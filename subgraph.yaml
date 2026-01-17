@@ -160,9 +160,9 @@ dataSources:
           handler: handleCircleCreated
         - event: CircleJoined(indexed uint256,indexed address,indexed uint256,uint8)
           handler: handleCircleJoined
-        - event: CircleStarted(indexed uint256,uint256,uint8)
+        - event: CircleStarted(indexed uint256,uint256,uint8,uint256)
           handler: handleCircleStarted
-        - event: PayoutDistributed(indexed uint256,indexed uint256,indexed address,uint256,address)
+        - event: PayoutDistributed(indexed uint256,indexed uint256,indexed address,uint256,address,uint256)
           handler: handlePayoutDistributed
         - event: PositionAssigned(indexed uint256,indexed address,uint256)
           handler: handlePositionAssigned
