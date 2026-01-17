@@ -45,7 +45,7 @@ export function handleProfileCreated(event: ProfileCreatedEvent): void {
   user.photo = event.params.profilePhoto;
   user.createdAt = event.params.createdAt;
   user.hasProfile = event.params.hasProfile;
-  
+
 
   // Set original contact info flags
   user.emailIsOriginal = event.params.email.length > 0;
@@ -133,19 +133,44 @@ export function handleReferralRewardPaid(event: ReferralRewardPaidEvent): void {
     if (!referee.isReferralProcessed) {
       referrer.referralCount = referrer.referralCount.plus(BigInt.fromI32(1));
       referee.isReferralProcessed = true;
-      referee.save();
     }
-    // Increment earned rewards
-    referrer.totalReferralRewardsEarned = referrer.totalReferralRewardsEarned.plus(
-      event.params.rewardAmount
-    );
-  }
-  // If referee IS address zero, it means it's a payment for a previously pending reward
-  // which was already added to totalReferralRewardsEarned when the ReferralRewardPending event fired.
-  if (event.params.referee.equals(Address.zero())) {
-    referrer.pendingRewardsEarned = referrer.pendingRewardsEarned.minus(
-      event.params.rewardAmount
-    );
+
+    let paidAmount = event.params.rewardAmount;
+    let pendingForThisUser = referee.pendingRewardAmount;
+
+    // Fallback for missing pending info
+    if (pendingForThisUser.equals(BigInt.zero()) && referee.isReferralProcessed && !referee.isPaid) {
+      pendingForThisUser = referrer.pendingRewardsEarned.lt(paidAmount) ? referrer.pendingRewardsEarned : paidAmount;
+    }
+
+    if (paidAmount.gt(pendingForThisUser)) {
+      // We are paying more than was pending. The extra is newly earned.
+      let extra = paidAmount.minus(pendingForThisUser);
+      referrer.totalReferralRewardsEarned = referrer.totalReferralRewardsEarned.plus(extra);
+    }
+
+    // Clear the pending balances
+    if (referrer.pendingRewardsEarned.ge(pendingForThisUser)) {
+      referrer.pendingRewardsEarned = referrer.pendingRewardsEarned.minus(pendingForThisUser);
+    } else {
+      referrer.pendingRewardsEarned = BigInt.zero();
+    }
+
+    referee.isPaid = true;
+    referee.pendingRewardAmount = BigInt.zero();
+    referee.save();
+  } else {
+    // Generic payment (referee is address(0))
+    let paidAmount = event.params.rewardAmount;
+    let pending = referrer.pendingRewardsEarned;
+
+    if (paidAmount.gt(pending)) {
+      let extra = paidAmount.minus(pending);
+      referrer.totalReferralRewardsEarned = referrer.totalReferralRewardsEarned.plus(extra);
+      referrer.pendingRewardsEarned = BigInt.zero();
+    } else {
+      referrer.pendingRewardsEarned = pending.minus(paidAmount);
+    }
   }
 
   referrer.save();
@@ -179,8 +204,11 @@ export function handleReferralRewardPending(
   if (!referee.isReferralProcessed) {
     referrer.referralCount = referrer.referralCount.plus(BigInt.fromI32(1));
     referee.isReferralProcessed = true;
-    referee.save();
   }
+
+  // Record specifically for this referee
+  referee.pendingRewardAmount = event.params.amount;
+  referee.save();
 
   // Increment earned rewards (it's pending, but it's earned)
   referrer.totalReferralRewardsEarned = referrer.totalReferralRewardsEarned.plus(

@@ -39,6 +39,8 @@ export function getOrCreateUser(address: Bytes): User {
     user.totalReferralRewardsEarned = BigInt.fromI32(0);
     user.pendingRewardsEarned = BigInt.fromI32(0);
     user.isReferralProcessed = false;
+    user.pendingRewardAmount = BigInt.fromI32(0);
+    user.isPaid = false;
 
     user.save();
   }

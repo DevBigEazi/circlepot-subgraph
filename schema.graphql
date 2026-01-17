@@ -60,6 +60,8 @@ type User @entity(immutable: false) {
   userReferred: [UserReferred!]! @derivedFrom(field: "user")
   referralRewards: [ReferralRewardPaid!]! @derivedFrom(field: "referrer")
   isReferralProcessed: Boolean! # true if this user's referral has been processed (first goal created)
+  pendingRewardAmount: BigInt! # amount specifically pending for this user's referral
+  isPaid: Boolean! # true if the referral reward for this user has been paid
 }
 
 #User Profile
