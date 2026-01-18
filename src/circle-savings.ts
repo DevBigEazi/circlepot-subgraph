@@ -141,7 +141,8 @@ export function handlePayoutDistributed(event: PayoutDistributedEvent): void {
     const transaction = createTransaction(event);
     const user = getOrCreateUser(event.params.recipient);
 
-    const payoutDistributed = new PayoutDistributed(event.transaction.hash);
+    const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+    const payoutDistributed = new PayoutDistributed(id);
     payoutDistributed.user = user.id;
     payoutDistributed.circleId = event.params.circleId;
     payoutDistributed.round = event.params.round;
@@ -197,7 +198,8 @@ export function handleCollateralWithdrawn(event: CollateralWithdrawnEvent): void
     const transaction = createTransaction(event);
     const user = getOrCreateUser(event.params.member);
 
-    const collateralWithdrawn = new CollateralWithdrawn(event.transaction.hash);
+    const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+    const collateralWithdrawn = new CollateralWithdrawn(id);
     collateralWithdrawn.user = user.id;
     collateralWithdrawn.circleId = event.params.circleId;
     collateralWithdrawn.amount = event.params.amount;
@@ -218,7 +220,8 @@ export function handleCollateralWithdrawn(event: CollateralWithdrawnEvent): void
 export function handleVotingInitiated(event: VotingInitiatedEvent): void {
     const transaction = createTransaction(event);
 
-    const votingInitiated = new VotingInitiated(event.transaction.hash);
+    const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+    const votingInitiated = new VotingInitiated(id);
     votingInitiated.circleId = event.params.circleId;
     votingInitiated.votingStartAt = event.params.votingStartTime;
     votingInitiated.votingEndAt = event.params.votingEndTime;
@@ -240,7 +243,8 @@ export function handleVoteCast(event: VoteCastEvent): void {
     const transaction = createTransaction(event);
     const user = getOrCreateUser(event.params.voter)
 
-    const voteCast = new VoteCast(event.transaction.hash);
+    const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+    const voteCast = new VoteCast(id);
     voteCast.voter = user.id;
     voteCast.circleId = event.params.circleId;
     voteCast.choice = event.params.choice;
@@ -266,7 +270,8 @@ export function handleMemberInvited(event: MemberInvitedEvent): void {
 export function handleVoteExecuted(event: VoteExecutedEvent): void {
     const transaction = createTransaction(event);
 
-    const voteExecuted = new VoteExecuted(event.transaction.hash);
+    const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+    const voteExecuted = new VoteExecuted(id);
     voteExecuted.circleId = event.params.circleId;
     voteExecuted.circleStarted = event.params.circleStarted;
     voteExecuted.startVoteTotal = event.params.startVoteCount;
@@ -302,7 +307,8 @@ export function handleContributionMade(event: ContributionMadeEvent): void {
     const transaction = createTransaction(event);
     const user = getOrCreateUser(event.params.member)
 
-    const contributionMade = new ContributionMade(event.transaction.hash);
+    const id = event.transaction.hash.concatI32(event.logIndex.toI32());
+    const contributionMade = new ContributionMade(id);
     contributionMade.user = user.id;
     contributionMade.circleId = event.params.circleId;
     contributionMade.round = event.params.round
