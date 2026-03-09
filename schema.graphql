@@ -25,19 +25,7 @@ type PersonalSavingsTokenSettings @entity(immutable: false) {
 
 type User @entity(immutable: false) {
   id: Bytes!
-  email: String! # string (unique via mapping)
-  phoneNumber: String! # string (unique via mapping)
-  username: String! # string
-  usernameLowercase: String! @unique # string
-  fullName: String! # string
-  accountId: BigInt! @unique # uint256
-  photo: String! # string
-  emailIsOriginal: Boolean! # true if email was provided at creation
-  phoneIsOriginal: Boolean! # true if phone was provided at creation
-  lastPhotoUpdate: BigInt! # uint256
-  lastProfileUpdate: BigInt! # uint256 - timestamp of last profile/contact update
   createdAt: BigInt! # uint256
-  hasProfile: Boolean! # bool
   repCategory: Int!
   totalReputation: BigInt! # uint256
   totalLatePayments: BigInt! # uint256
@@ -49,8 +37,6 @@ type User @entity(immutable: false) {
   circlesCreated: [CircleCreated!]! @derivedFrom(field: "user")
   circlesJoined: [CircleJoined!]! @derivedFrom(field: "user")
   circlesCompleted: [CircleCompleted]! @derivedFrom(field: "user")
-  profileUpdates: [ProfileUpdated!]! @derivedFrom(field: "user")
-  contactInfoUpdates: [ContactInfoUpdated!]! @derivedFrom(field: "user")
   # Referral fields
   referredBy: User
   referrals: [User!]! @derivedFrom(field: "referredBy")
@@ -60,29 +46,8 @@ type User @entity(immutable: false) {
   userReferred: [UserReferred!]! @derivedFrom(field: "user")
   referralRewards: [ReferralRewardPaid!]! @derivedFrom(field: "referrer")
   isReferralProcessed: Boolean! # true if this user's referral has been processed (first goal created)
-}
-
-#User Profile
-type ProfileCreated @entity(immutable: true) {
-  id: Bytes!
-  user: User!
-  transaction: Transaction!
-}
-
-type ProfileUpdated @entity(immutable: true) {
-  id: Bytes!
-  user: User!
-  fullName: String! # string
-  photo: String! # string
-  transaction: Transaction!
-}
-
-type ContactInfoUpdated @entity(immutable: true) {
-  id: Bytes!
-  user: User!
-  email: String! # string
-  phoneNumber: String! # string
-  transaction: Transaction!
+  pendingRewardAmount: BigInt! # amount specifically pending for this user's referral
+  isPaid: Boolean! # true if the referral reward for this user has been paid
 }
 
 type UserReferred @entity(immutable: true) {
@@ -95,7 +60,7 @@ type UserReferred @entity(immutable: true) {
 type ReferralRewardPaid @entity(immutable: true) {
   id: Bytes!
   referrer: User!
-  referee: User!
+  referee: User
   token: Bytes! # address
   rewardAmount: BigInt! # uint256
   transaction: Transaction!
@@ -104,7 +69,7 @@ type ReferralRewardPaid @entity(immutable: true) {
 type ReferralRewardPending @entity(immutable: true) {
   id: Bytes!
   referrer: User!
-  referee: User!
+  referee: User
   token: Bytes! # address
   amount: BigInt! # uint256
   transaction: Transaction!
@@ -286,11 +251,9 @@ type Circle @entity(immutable: false) {
   lastVoteExecuted: VoteExecuted # Reference to last vote
   voteWithdrawWon: Boolean
   token: Bytes! # address
-  isYieldEnabled: Boolean! # bool
-  lateFeePool: BigInt! # uint256
-  totalPoints: BigInt! # uint256
   totalPot: BigInt! # uint256
   contributionsThisRound: BigInt! # uint256
+  nextDeadline: BigInt # uint256
 }
 
 # Immutable event for circle creation
@@ -307,8 +270,6 @@ type CircleCreated @entity(immutable: true) {
   circleVisibility: Int! # 0 = Private(default), 1 = Public
   circleCreatedAt: BigInt! # uint256
   token: Bytes! # address
-  isYieldEnabled: Boolean! # bool
-  yieldAPY: BigInt! # uint256 (in basis points, 500 = 5%)
   transaction: Transaction!
 }
 
@@ -326,6 +287,7 @@ type CircleStarted @entity(immutable: true) {
   id: Bytes!
   circleId: BigInt! # uint256
   circleStartedAt: BigInt! # uint256
+  roundDeadline: BigInt! # uint256
   transaction: Transaction!
 }
 
@@ -396,6 +358,7 @@ type PayoutDistributed @entity(immutable: true) {
   round: BigInt! # uint256
   payoutAmount: BigInt! # uint256
   token: Bytes! # address
+  nextRoundDeadline: BigInt! # uint256
   transaction: Transaction!
 }
 
@@ -445,36 +408,4 @@ type LateContributionMade @entity(immutable: true) {
   transaction: Transaction!
 }
 
-type PointsAwarded @entity(immutable: true) {
-  id: Bytes!
-  user: User!
-  circleId: BigInt! # uint256
-  points: BigInt! # uint256
-  reason: String! # string
-  transaction: Transaction!
-}
-
-type CircleYieldDistributed @entity(immutable: true) {
-  id: Bytes!
-  circleId: BigInt! # uint256
-  totalSurplus: BigInt! # uint256
-  platformShare: BigInt! # uint256
-  communityShare: BigInt! # uint256
-  transaction: Transaction!
-}
-
-type LateFeeAddedToPool @entity(immutable: true) {
-  id: Bytes!
-  user: User!
-  circleId: BigInt! # uint256
-  amount: BigInt! # uint256
-  transaction: Transaction!
-}
-
-type MemberRewardClaimed @entity(immutable: true) {
-  id: Bytes!
-  user: User!
-  circleId: BigInt! # uint256
-  rewardAmount: BigInt! # uint256
-  transaction: Transaction!
-}
+# Removed yield events from CircleSavings

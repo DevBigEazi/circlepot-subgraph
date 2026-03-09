@@ -1,5 +1,12 @@
 import { BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
-import { Transaction, User, ReferralSystem, ReferralTokenSettings, PersonalSavingsSystem, PersonalSavingsTokenSettings } from "../generated/schema";
+import {
+  Transaction,
+  User,
+  ReferralSystem,
+  ReferralTokenSettings,
+  PersonalSavingsSystem,
+  PersonalSavingsTokenSettings,
+} from "../generated/schema";
 
 export function createTransaction(event: ethereum.Event): Transaction {
   const transaction = new Transaction(event.transaction.hash);
@@ -17,21 +24,9 @@ export function getOrCreateUser(address: Bytes): User {
   if (user == null) {
     user = new User(address);
     user.id = address;
-    user.email = "";
-    user.phoneNumber = "";
-    user.username = "";
-    user.usernameLowercase = "";
-    user.fullName = "";
-    user.accountId = BigInt.fromI32(0);
-    user.photo = "";
-    user.emailIsOriginal = false;
-    user.phoneIsOriginal = false;
-    user.lastPhotoUpdate = BigInt.fromI32(0);
-    user.lastProfileUpdate = BigInt.fromI32(0);
     user.createdAt = BigInt.fromI32(0);
-    user.hasProfile = false;
     user.repCategory = 0;
-    user.totalReputation = BigInt.fromI32(0);
+    user.totalReputation = BigInt.fromI32(300);
     user.totalLatePayments = BigInt.fromI32(0);
     user.totalGoalsCompleted = BigInt.fromI32(0);
     user.totalCirclesCompleted = BigInt.fromI32(0);
@@ -39,6 +34,8 @@ export function getOrCreateUser(address: Bytes): User {
     user.totalReferralRewardsEarned = BigInt.fromI32(0);
     user.pendingRewardsEarned = BigInt.fromI32(0);
     user.isReferralProcessed = false;
+    user.pendingRewardAmount = BigInt.fromI32(0);
+    user.isPaid = false;
 
     user.save();
   }
@@ -61,7 +58,9 @@ export function getOrCreateReferralSystem(): ReferralSystem {
   return system as ReferralSystem;
 }
 
-export function getOrCreateReferralTokenSettings(token: Bytes): ReferralTokenSettings {
+export function getOrCreateReferralTokenSettings(
+  token: Bytes,
+): ReferralTokenSettings {
   let settings = ReferralTokenSettings.load(token);
 
   if (settings == null) {
@@ -92,7 +91,9 @@ export function getOrCreatePersonalSavingsSystem(): PersonalSavingsSystem {
   return system as PersonalSavingsSystem;
 }
 
-export function getOrCreatePersonalSavingsTokenSettings(token: Bytes): PersonalSavingsTokenSettings {
+export function getOrCreatePersonalSavingsTokenSettings(
+  token: Bytes,
+): PersonalSavingsTokenSettings {
   let settings = PersonalSavingsTokenSettings.load(token);
 
   if (settings == null) {
