@@ -1,84 +1,260 @@
 [
-  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
   {
     "inputs": [
-      { "internalType": "address", "name": "target", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "target",
+        "type": "address"
+      }
     ],
     "name": "AddressEmptyCode",
     "type": "error"
   },
-  { "inputs": [], "name": "AddressZeroNotAllowed", "type": "error" },
-  { "inputs": [], "name": "AlreadyContributed", "type": "error" },
-  { "inputs": [], "name": "AlreadyJoined", "type": "error" },
-  { "inputs": [], "name": "AlreadyVoted", "type": "error" },
-  { "inputs": [], "name": "CircleNotActive", "type": "error" },
-  { "inputs": [], "name": "CircleNotExist", "type": "error" },
-  { "inputs": [], "name": "CircleNotOpen", "type": "error" },
-  { "inputs": [], "name": "CircleNotPrivate", "type": "error" },
+  {
+    "inputs": [],
+    "name": "AddressZeroNotAllowed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "AlreadyContributed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "AlreadyJoined",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "AlreadyVoted",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CircleNotActive",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CircleNotExist",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CircleNotOpen",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CircleNotPrivate",
+    "type": "error"
+  },
   {
     "inputs": [
-      { "internalType": "address", "name": "implementation", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "implementation",
+        "type": "address"
+      }
     ],
     "name": "ERC1967InvalidImplementation",
     "type": "error"
   },
-  { "inputs": [], "name": "ERC1967NonPayable", "type": "error" },
-  { "inputs": [], "name": "FailedCall", "type": "error" },
-  { "inputs": [], "name": "GracePeriodNotExpired", "type": "error" },
-  { "inputs": [], "name": "InsufficientCollateral", "type": "error" },
-  { "inputs": [], "name": "InvalidCircle", "type": "error" },
-  { "inputs": [], "name": "InvalidContributionAmount", "type": "error" },
-  { "inputs": [], "name": "InvalidInitialization", "type": "error" },
-  { "inputs": [], "name": "InvalidMemberCount", "type": "error" },
-  { "inputs": [], "name": "InvalidVoteChoice", "type": "error" },
-  { "inputs": [], "name": "MinMembersNotReached", "type": "error" },
-  { "inputs": [], "name": "NotActiveMember", "type": "error" },
-  { "inputs": [], "name": "NotInitializing", "type": "error" },
-  { "inputs": [], "name": "NotInvited", "type": "error" },
-  { "inputs": [], "name": "NotNextRecipient", "type": "error" },
-  { "inputs": [], "name": "OnlyCreator", "type": "error" },
+  {
+    "inputs": [],
+    "name": "ERC1967NonPayable",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FailedCall",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GracePeriodNotExpired",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InsufficientCollateral",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidCircle",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidContributionAmount",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidInitialization",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidMemberCount",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidVoteChoice",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MinMembersNotReached",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotActiveMember",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotInitializing",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotInvited",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotNextRecipient",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyCreator",
+    "type": "error"
+  },
   {
     "inputs": [
-      { "internalType": "address", "name": "owner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
     ],
     "name": "OwnableInvalidOwner",
     "type": "error"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
     ],
     "name": "OwnableUnauthorizedAccount",
     "type": "error"
   },
-  { "inputs": [], "name": "ReentrancyGuardReentrantCall", "type": "error" },
+  {
+    "inputs": [],
+    "name": "ReentrancyGuardReentrantCall",
+    "type": "error"
+  },
   {
     "inputs": [
-      { "internalType": "address", "name": "token", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
     ],
     "name": "SafeERC20FailedOperation",
     "type": "error"
   },
-  { "inputs": [], "name": "SameVisibility", "type": "error" },
-  { "inputs": [], "name": "TitleTooShortOrLong", "type": "error" },
-  { "inputs": [], "name": "TokenAlreadySupported", "type": "error" },
-  { "inputs": [], "name": "TokenNotSupported", "type": "error" },
-  { "inputs": [], "name": "UUPSUnauthorizedCallContext", "type": "error" },
+  {
+    "inputs": [],
+    "name": "SameVisibility",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TitleTooShortOrLong",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TokenAlreadySupported",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TokenNotSupported",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UUPSUnauthorizedCallContext",
+    "type": "error"
+  },
   {
     "inputs": [
-      { "internalType": "bytes32", "name": "slot", "type": "bytes32" }
+      {
+        "internalType": "bytes32",
+        "name": "slot",
+        "type": "bytes32"
+      }
     ],
     "name": "UUPSUnsupportedProxiableUUID",
     "type": "error"
   },
-  { "inputs": [], "name": "UltimatumNotPassed", "type": "error" },
-  { "inputs": [], "name": "UltimatumNotReached", "type": "error" },
-  { "inputs": [], "name": "UnsupportedToken", "type": "error" },
-  { "inputs": [], "name": "VoteAlreadyExecuted", "type": "error" },
-  { "inputs": [], "name": "VotingAlreadyExecuted", "type": "error" },
-  { "inputs": [], "name": "VotingNotActive", "type": "error" },
-  { "inputs": [], "name": "VotingPeriodEnded", "type": "error" },
-  { "inputs": [], "name": "VotingStillActive", "type": "error" },
+  {
+    "inputs": [],
+    "name": "UltimatumNotPassed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UltimatumNotReached",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UnsupportedToken",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "VoteAlreadyExecuted",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "VotingAlreadyExecuted",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "VotingNotActive",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "VotingPeriodEnded",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "VotingStillActive",
+    "type": "error"
+  },
   {
     "anonymous": false,
     "inputs": [
@@ -147,12 +323,6 @@
         "internalType": "address",
         "name": "token",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "yieldAPY",
-        "type": "uint256"
       }
     ],
     "name": "CircleCreated",
@@ -429,31 +599,6 @@
         "type": "uint256"
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "member",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "LateFeeAddedToPool",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "circleId",
-        "type": "uint256"
-      },
-      {
         "indexed": false,
         "internalType": "uint256",
         "name": "round",
@@ -510,31 +655,6 @@
       }
     ],
     "name": "MemberInvited",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "circleId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "member",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "rewardAmount",
-        "type": "uint256"
-      }
-    ],
-    "name": "MemberRewardClaimed",
     "type": "event"
   },
   {
@@ -617,37 +737,6 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "points",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "reason",
-        "type": "string"
-      }
-    ],
-    "name": "PointsAwarded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "circleId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "member",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
         "name": "position",
         "type": "uint256"
       }
@@ -705,31 +794,6 @@
       }
     ],
     "name": "Upgraded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newVault",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "project",
-        "type": "string"
-      }
-    ],
-    "name": "VaultUpdated",
     "type": "event"
   },
   {
@@ -839,151 +903,207 @@
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
+    "inputs": [],
+    "name": "FIXED_FEE_AMOUNT",
+    "outputs": [
       {
-        "indexed": true,
         "internalType": "uint256",
-        "name": "circleId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "totalSurplus",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "platformShare",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "communityShare",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "name": "YieldDistributed",
-    "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "FIXED_FEE_AMOUNT",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "FIXED_FEE_THRESHOLD",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "LATE_FEE_BPS",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MAX_CONTRIBUTION",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MAX_MEMBERS",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MIN_CONTRIBUTION",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MIN_MEMBERS",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "PLATFORM_FEE_BPS",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "PLATFORM_YIELD_SHARE_BPS",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "PRIVATE_CIRCLE_DEAD_FEE",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "PUBLIC_CIRCLE_DEAD_FEE",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "START_VOTE_THRESHOLD",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "UPGRADE_INTERFACE_VERSION",
-    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "VERSION",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "VISIBILITY_UPDATE_FEE",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "VOTING_PERIOD",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      }
     ],
     "name": "WithdrawCollateral",
     "outputs": [],
@@ -999,13 +1119,23 @@
       }
     ],
     "name": "_getGracePeriod",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "pure",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_token", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
     ],
     "name": "addSupportedToken",
     "outputs": [],
@@ -1014,16 +1144,30 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      }
     ],
     "name": "canWithdrawAfterVote",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      },
       {
         "internalType": "enum CircleSavings.VoteChoice",
         "name": "_choice",
@@ -1036,13 +1180,35 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "circleConfigs",
     "outputs": [
-      { "internalType": "uint256", "name": "circleId", "type": "uint256" },
-      { "internalType": "string", "name": "title", "type": "string" },
-      { "internalType": "string", "name": "description", "type": "string" },
-      { "internalType": "address", "name": "creator", "type": "address" },
+      {
+        "internalType": "uint256",
+        "name": "circleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "creator",
+        "type": "address"
+      },
       {
         "internalType": "uint256",
         "name": "contributionAmount",
@@ -1053,14 +1219,21 @@
         "name": "frequency",
         "type": "uint8"
       },
-      { "internalType": "uint256", "name": "maxMembers", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "maxMembers",
+        "type": "uint256"
+      },
       {
         "internalType": "enum CircleSavings.Visibility",
         "name": "visibility",
         "type": "uint8"
       },
-      { "internalType": "uint256", "name": "createdAt", "type": "uint256" },
-      { "internalType": "bool", "name": "isYieldEnabled", "type": "bool" }
+      {
+        "internalType": "uint256",
+        "name": "createdAt",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -1068,61 +1241,10 @@
   {
     "inputs": [],
     "name": "circleCounter",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "address", "name": "", "type": "address" }
-    ],
-    "name": "circleInvitations",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "name": "circleLateFeePool",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "uint256", "name": "", "type": "uint256" }
-    ],
-    "name": "circleMemberList",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "address", "name": "", "type": "address" }
-    ],
-    "name": "circleMembers",
     "outputs": [
-      { "internalType": "uint256", "name": "position", "type": "uint256" },
       {
         "internalType": "uint256",
-        "name": "totalContributed",
-        "type": "uint256"
-      },
-      { "internalType": "bool", "name": "hasReceivedPayout", "type": "bool" },
-      { "internalType": "bool", "name": "isActive", "type": "bool" },
-      {
-        "internalType": "uint256",
-        "name": "collateralLocked",
-        "type": "uint256"
-      },
-      { "internalType": "uint256", "name": "joinedAt", "type": "uint256" },
-      {
-        "internalType": "uint256",
-        "name": "performancePoints",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -1131,23 +1253,133 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "uint256", "name": "", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "circleInvitations",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "circleMemberList",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "circleMembers",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "position",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalContributed",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "hasReceivedPayout",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "isActive",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "collateralLocked",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "joinedAt",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
     "name": "circleRoundDeadlines",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "name": "circleShares",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "circleStatus",
     "outputs": [
       {
@@ -1160,10 +1392,26 @@
         "name": "currentMembers",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "currentRound", "type": "uint256" },
-      { "internalType": "uint256", "name": "totalRounds", "type": "uint256" },
-      { "internalType": "uint256", "name": "startedAt", "type": "uint256" },
-      { "internalType": "uint256", "name": "totalPot", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "currentRound",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalRounds",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "startedAt",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalPot",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "contributionsThisRound",
@@ -1174,14 +1422,32 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "circleToken",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "circleVotes",
     "outputs": [
       {
@@ -1189,7 +1455,11 @@
         "name": "votingStartTime",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "votingEndTime", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "votingEndTime",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "startVoteCount",
@@ -1200,8 +1470,16 @@
         "name": "withdrawVoteCount",
         "type": "uint256"
       },
-      { "internalType": "bool", "name": "votingActive", "type": "bool" },
-      { "internalType": "bool", "name": "voteExecuted", "type": "bool" },
+      {
+        "internalType": "bool",
+        "name": "votingActive",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "voteExecuted",
+        "type": "bool"
+      },
       {
         "internalType": "uint256",
         "name": "totalEligibleVoters",
@@ -1213,7 +1491,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      }
     ],
     "name": "contribute",
     "outputs": [],
@@ -1224,8 +1506,16 @@
     "inputs": [
       {
         "components": [
-          { "internalType": "string", "name": "title", "type": "string" },
-          { "internalType": "string", "name": "description", "type": "string" },
+          {
+            "internalType": "string",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
           {
             "internalType": "uint256",
             "name": "contributionAmount",
@@ -1246,9 +1536,11 @@
             "name": "visibility",
             "type": "uint8"
           },
-          { "internalType": "bool", "name": "enableYield", "type": "bool" },
-          { "internalType": "address", "name": "token", "type": "address" },
-          { "internalType": "uint256", "name": "yieldAPY", "type": "uint256" }
+          {
+            "internalType": "address",
+            "name": "token",
+            "type": "address"
+          }
         ],
         "internalType": "struct CircleSavings.CreateCircleParams",
         "name": "params",
@@ -1256,13 +1548,23 @@
       }
     ],
     "name": "createCircle",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      }
     ],
     "name": "executeVote",
     "outputs": [],
@@ -1272,13 +1574,23 @@
   {
     "inputs": [],
     "name": "fixedFeeThreshold",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      },
       {
         "internalType": "address[]",
         "name": "_membersToForfeit",
@@ -1292,16 +1604,36 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      }
     ],
     "name": "getCircleDetails",
     "outputs": [
       {
         "components": [
-          { "internalType": "uint256", "name": "circleId", "type": "uint256" },
-          { "internalType": "string", "name": "title", "type": "string" },
-          { "internalType": "string", "name": "description", "type": "string" },
-          { "internalType": "address", "name": "creator", "type": "address" },
+          {
+            "internalType": "uint256",
+            "name": "circleId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "creator",
+            "type": "address"
+          },
           {
             "internalType": "uint256",
             "name": "contributionAmount",
@@ -1322,8 +1654,11 @@
             "name": "visibility",
             "type": "uint8"
           },
-          { "internalType": "uint256", "name": "createdAt", "type": "uint256" },
-          { "internalType": "bool", "name": "isYieldEnabled", "type": "bool" }
+          {
+            "internalType": "uint256",
+            "name": "createdAt",
+            "type": "uint256"
+          }
         ],
         "internalType": "struct CircleSavings.CircleConfig",
         "name": "config",
@@ -1351,8 +1686,16 @@
             "name": "totalRounds",
             "type": "uint256"
           },
-          { "internalType": "uint256", "name": "startedAt", "type": "uint256" },
-          { "internalType": "uint256", "name": "totalPot", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "startedAt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalPot",
+            "type": "uint256"
+          },
           {
             "internalType": "uint256",
             "name": "contributionsThisRound",
@@ -1368,61 +1711,109 @@
         "name": "currentDeadline",
         "type": "uint256"
       },
-      { "internalType": "bool", "name": "canStart", "type": "bool" }
+      {
+        "internalType": "bool",
+        "name": "canStart",
+        "type": "bool"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      }
     ],
     "name": "getCircleMembers",
     "outputs": [
-      { "internalType": "address[]", "name": "", "type": "address[]" }
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      }
     ],
     "name": "getCircleProgress",
     "outputs": [
-      { "internalType": "uint256", "name": "currentRound", "type": "uint256" },
-      { "internalType": "uint256", "name": "totalRounds", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "currentRound",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalRounds",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "contributionsThisRound",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "totalMembers", "type": "uint256" },
-      { "internalType": "uint256", "name": "lateFeePool", "type": "uint256" },
-      { "internalType": "uint256", "name": "totalPoints", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "totalMembers",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      }
     ],
     "name": "getCircleToken",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" },
-      { "internalType": "address", "name": "_member", "type": "address" }
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_member",
+        "type": "address"
+      }
     ],
     "name": "getMemberInfo",
     "outputs": [
       {
         "components": [
-          { "internalType": "uint256", "name": "position", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "position",
+            "type": "uint256"
+          },
           {
             "internalType": "uint256",
             "name": "totalContributed",
@@ -1433,16 +1824,19 @@
             "name": "hasReceivedPayout",
             "type": "bool"
           },
-          { "internalType": "bool", "name": "isActive", "type": "bool" },
+          {
+            "internalType": "bool",
+            "name": "isActive",
+            "type": "bool"
+          },
           {
             "internalType": "uint256",
             "name": "collateralLocked",
             "type": "uint256"
           },
-          { "internalType": "uint256", "name": "joinedAt", "type": "uint256" },
           {
             "internalType": "uint256",
-            "name": "performancePoints",
+            "name": "joinedAt",
             "type": "uint256"
           }
         ],
@@ -1455,17 +1849,31 @@
         "name": "hasContributedThisRound",
         "type": "bool"
       },
-      { "internalType": "uint256", "name": "nextDeadline", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "nextDeadline",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_token", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
     ],
     "name": "getPlatformFees",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -1473,18 +1881,30 @@
     "inputs": [],
     "name": "getSupportedTokens",
     "outputs": [
-      { "internalType": "address[]", "name": "", "type": "address[]" }
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      }
     ],
     "name": "getVoteInfo",
     "outputs": [
-      { "internalType": "uint256", "name": "votingEndTime", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "votingEndTime",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "startVoteCount",
@@ -1495,8 +1915,16 @@
         "name": "withdrawVoteCount",
         "type": "uint256"
       },
-      { "internalType": "bool", "name": "votingActive", "type": "bool" },
-      { "internalType": "bool", "name": "voteExecuted", "type": "bool" },
+      {
+        "internalType": "bool",
+        "name": "votingActive",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "voteExecuted",
+        "type": "bool"
+      },
       {
         "internalType": "enum CircleSavings.VoteChoice",
         "name": "userVote",
@@ -1513,13 +1941,21 @@
         "name": "_supportedTokens",
         "type": "address[]"
       },
-      { "internalType": "address", "name": "_treasury", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "_treasury",
+        "type": "address"
+      },
       {
         "internalType": "address",
         "name": "_reputationContract",
         "type": "address"
       },
-      { "internalType": "address", "name": "initialOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "initialOwner",
+        "type": "address"
+      }
     ],
     "name": "initialize",
     "outputs": [],
@@ -1528,7 +1964,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      }
     ],
     "name": "initiateVoting",
     "outputs": [],
@@ -1537,8 +1977,16 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" },
-      { "internalType": "address[]", "name": "_invitees", "type": "address[]" }
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_invitees",
+        "type": "address[]"
+      }
     ],
     "name": "inviteMembers",
     "outputs": [],
@@ -1547,26 +1995,54 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" },
-      { "internalType": "address", "name": "_user", "type": "address" }
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      }
     ],
     "name": "isInvited",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_token", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
     ],
     "name": "isSupportedToken",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      }
     ],
     "name": "joinCircle",
     "outputs": [],
@@ -1575,8 +2051,16 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "address", "name": "", "type": "address" }
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
     ],
     "name": "memberVotes",
     "outputs": [
@@ -1592,34 +2076,68 @@
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "platformFeeBps",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "name": "platformFeesByToken",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "proxiableUUID",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_token", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
     ],
     "name": "removeSupportedToken",
     "outputs": [],
@@ -1636,24 +2154,52 @@
   {
     "inputs": [],
     "name": "reputationContract",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "address", "name": "", "type": "address" }
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
     ],
     "name": "roundContributions",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_newBps", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_newBps",
+        "type": "uint256"
+      }
     ],
     "name": "setPlatformFeeBps",
     "outputs": [],
@@ -1662,46 +2208,49 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_token", "type": "address" },
-      { "internalType": "address", "name": "_vault", "type": "address" },
-      { "internalType": "string", "name": "_project", "type": "string" }
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    "name": "setTokenVault",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "name": "supportedTokenList",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "supportedTokens",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "tokenVaults",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "name": "totalCirclePoints",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "supportedTokens",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
     ],
     "name": "transferOwnership",
     "outputs": [],
@@ -1711,13 +2260,23 @@
   {
     "inputs": [],
     "name": "treasury",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_circleId", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "_circleId",
+        "type": "uint256"
+      },
       {
         "internalType": "enum CircleSavings.Visibility",
         "name": "_newVisibility",
@@ -1731,7 +2290,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_newThreshold", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_newThreshold",
+        "type": "uint256"
+      }
     ],
     "name": "updateFeeThreshold",
     "outputs": [],
@@ -1753,7 +2316,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_new", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_new",
+        "type": "address"
+      }
     ],
     "name": "updateTreasury",
     "outputs": [],
@@ -1762,13 +2329,21 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_treasury", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "_treasury",
+        "type": "address"
+      },
       {
         "internalType": "address",
         "name": "_reputationContract",
         "type": "address"
       },
-      { "internalType": "uint8", "name": "_version", "type": "uint8" }
+      {
+        "internalType": "uint8",
+        "name": "_version",
+        "type": "uint8"
+      }
     ],
     "name": "upgrade",
     "outputs": [],
@@ -1782,7 +2357,11 @@
         "name": "newImplementation",
         "type": "address"
       },
-      { "internalType": "bytes", "name": "data", "type": "bytes" }
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
     ],
     "name": "upgradeToAndCall",
     "outputs": [],
@@ -1792,13 +2371,23 @@
   {
     "inputs": [],
     "name": "version",
-    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
     "stateMutability": "pure",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_token", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
     ],
     "name": "withdrawPlatformFees",
     "outputs": [],

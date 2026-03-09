@@ -5,61 +5,50 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: UserProfileProxy
-    network: celo-sepolia
+    name: ReferralRewardsProxy
+    network: fuji
     source:
-      address: "0x17793B9d1E050A6B4f1855c664Ce6DAE02507bF6"
-      abi: UserProfile
-      startBlock: 15346199
+      address: "0xab26d4ee191f25f2b73959291b19c5a3d2601b34"
+      abi: ReferralRewards
+      startBlock: 52330283
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
-        - PhotoUpdated
-        - ProfileCreated
-        - ProfileUpdated
-        - ContactInfoUpdated
+        - UserReferred
+        - ReferralRewardPaid
+        - ReferralRewardPending
+        - ReferralSystem
+        - ReferralTokenSettings
       abis:
-        - name: UserProfile
-          file: ./abis/UserProfile.json
+        - name: ReferralRewards
+          file: ./abis/ReferralRewards.json
       eventHandlers:
-        - event: ProfileCreated(indexed address,string,string,string,string,uint256,string,uint256,bool)
-          handler: handleProfileCreated
-        - event: ProfileUpdated(indexed address,string,string)
-          handler: handleProfileUpdated
-        - event: ContactInfoUpdated(indexed address,string,string)
-          handler: handleContactInfoUpdated
         - event: UserReferred(indexed address,indexed address,uint256)
           handler: handleUserReferred
-        - event: ReferralRewardPaid(indexed address,indexed address,indexed address,uint256,uint256)
+        - event: ReferralRewardPaid(indexed address,indexed address,indexed address,uint256)
           handler: handleReferralRewardPaid
-        - event: ReferralRewardPending(indexed address,indexed address,indexed address,uint256,uint256)
+        - event: ReferralRewardPending(indexed address,indexed address,indexed address,uint256)
           handler: handleReferralRewardPending
-        - event: ReferralRewardsToggled(bool,uint256)
-          handler: handleReferralRewardsToggled
-        - event: ReferralBonusUpdated(indexed address,uint256,uint256,uint256)
-          handler: handleReferralBonusUpdated
         - event: CampaignStarted(uint256,uint256)
           handler: handleCampaignStarted
-        - event: CampaignBonusUpdated(indexed address,uint256,uint256)
+        - event: CampaignBonusUpdated(indexed address,uint256)
           handler: handleCampaignBonusUpdated
         - event: CampaignEnded(uint256)
           handler: handleCampaignEnded
-        - event: TokenAdded(indexed address)
-          handler: handleTokenAdded
-        - event: TokenRemoved(indexed address)
-          handler: handleTokenRemoved
-        - event: PersonalSavingsContractUpdated(indexed address)
-          handler: handlePersonalSavingsContractUpdated
-      file: ./src/user-profile.ts
+        - event: PersonalSavingsUpdated(indexed address)
+          handler: handlePersonalSavingsUpdated
+        - event: RelayerStatusUpdated(indexed address,bool)
+          handler: handleRelayerStatusUpdated
+      file: ./src/referral-rewards.ts
   - kind: ethereum
     name: ReputationProxy
-    network: celo-sepolia
+    network: fuji
     source:
-      address: "0x946732ef05667F4269A243A5e388241ce1b15368"
+      address: "0x26a606222894d22cdea34f2d0ca705e082e86372"
       abi: Reputation
-      startBlock: 15346199
+      startBlock: 52330283
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -90,11 +79,11 @@ dataSources:
       file: ./src/reputation.ts
   - kind: ethereum
     name: PersonalSavingsProxy
-    network: celo-sepolia
+    network: fuji
     source:
-      address: "0xC555065b86982684C2fC0bC88e6A90e43b46e3Bb"
+      address: "0x123bff8d754b29772e1efad5b075f55600577dcd"
       abi: PersonalSavings
-      startBlock: 15346199
+      startBlock: 52330283
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -125,11 +114,11 @@ dataSources:
       file: ./src/personal-savings.ts
   - kind: ethereum
     name: CircleSavingsProxy
-    network: celo-sepolia
+    network: fuji
     source:
-      address: "0xBdfA9c347B8A8e23b2D04544A47E9F1dE14529D4"
+      address: "0x6e222b5507F7554A163B37C4DfC6d62dE3077fA8"
       abi: CircleSavings
-      startBlock: 15346199
+      startBlock: 52453926
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -156,7 +145,7 @@ dataSources:
       eventHandlers:
         - event: VisibilityUpdated(indexed uint256,indexed address,uint8)
           handler: handleVisibilityUpdated
-        - event: CircleCreated(indexed uint256,string,string,indexed address,indexed uint256,uint8,uint256,uint8,uint256,uint256,address,uint256)
+        - event: CircleCreated(indexed uint256,string,string,indexed address,indexed uint256,uint8,uint256,uint8,uint256,uint256,address)
           handler: handleCircleCreated
         - event: CircleJoined(indexed uint256,indexed address,indexed uint256,uint8)
           handler: handleCircleJoined
@@ -186,16 +175,6 @@ dataSources:
           handler: handleCollateralReturned
         - event: DeadCircleFeeDeducted(indexed uint256,indexed address,indexed uint256)
           handler: handleDeadCircleFeeDeducted
-        - event: PointsAwarded(indexed uint256,indexed address,uint256,string)
-          handler: handlePointsAwarded
-        - event: YieldDistributed(indexed uint256,uint256,uint256,uint256)
-          handler: handleYieldDistributed
-        - event: LateFeeAddedToPool(indexed uint256,indexed address,uint256)
-          handler: handleLateFeeAddedToPool
-        - event: MemberRewardClaimed(indexed uint256,indexed address,uint256)
-          handler: handleMemberRewardClaimed
-        - event: VaultUpdated(indexed address,indexed address,string)
-          handler: handleVaultUpdated
         - event: TokenAdded(indexed address)
           handler: handleTokenAdded
         - event: TokenRemoved(indexed address)
