@@ -8,9 +8,9 @@ dataSources:
     name: ReferralRewardsProxy
     network: fuji
     source:
-      address: "0xab26d4ee191f25f2b73959291b19c5a3d2601b34"
+      address: "0x4c252089abA090FF4306c899FD07ac6A21a56e7e"
       abi: ReferralRewards
-      startBlock: 52330283
+      startBlock: 52605215
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -37,8 +37,14 @@ dataSources:
           handler: handleCampaignBonusUpdated
         - event: CampaignEnded(uint256)
           handler: handleCampaignEnded
+        - event: ReferralRewardsEnabledUpdated(bool)
+          handler: handleReferralRewardsEnabledUpdated
+        - event: ReferralBonusUpdated(indexed address,uint256)
+          handler: handleReferralBonusUpdated
         - event: PersonalSavingsUpdated(indexed address)
           handler: handlePersonalSavingsUpdated
+        - event: TokenSupportUpdated(indexed address,bool)
+          handler: handleTokenSupportUpdated
         - event: RelayerStatusUpdated(indexed address,bool)
           handler: handleRelayerStatusUpdated
       file: ./src/referral-rewards.ts
