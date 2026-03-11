@@ -104,6 +104,17 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "SafeERC20FailedOperation",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "UUPSUnauthorizedCallContext",
     "type": "error"
@@ -221,6 +232,25 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "ReferralBonusUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "referrer",
         "type": "address"
       },
@@ -281,6 +311,19 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "enabled",
+        "type": "bool"
+      }
+    ],
+    "name": "ReferralRewardsEnabledUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "relayer",
@@ -294,6 +337,25 @@
       }
     ],
     "name": "RelayerStatusUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "status",
+        "type": "bool"
+      }
+    ],
+    "name": "TokenSupportUpdated",
     "type": "event"
   },
   {
@@ -457,6 +519,45 @@
       {
         "internalType": "uint256",
         "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "getReferralSettings",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "enabled",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "standardBonus",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "inCampaign",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "campaignBonus",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "campaignEndsAt",
         "type": "uint256"
       }
     ],
@@ -758,6 +859,19 @@
       }
     ],
     "name": "setPersonalSavingsContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "_enabled",
+        "type": "bool"
+      }
+    ],
+    "name": "setReferralRewardsEnabled",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

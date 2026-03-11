@@ -67,6 +67,7 @@ export function getOrCreateReferralTokenSettings(
     settings = new ReferralTokenSettings(token);
     settings.system = Bytes.fromUTF8("system");
     settings.token = token;
+    settings.isSupported = true;
     settings.bonusAmount = BigInt.fromI32(0);
     settings.campaignBonusAmount = BigInt.fromI32(0);
     settings.totalRewardsPaid = BigInt.fromI32(0);

@@ -5,6 +5,9 @@ import {
   CampaignStarted as CampaignStartedEvent,
   CampaignBonusUpdated as CampaignBonusUpdatedEvent,
   CampaignEnded as CampaignEndedEvent,
+  ReferralRewardsEnabledUpdated as ReferralRewardsEnabledUpdatedEvent,
+  ReferralBonusUpdated as ReferralBonusUpdatedEvent,
+  TokenSupportUpdated as TokenSupportUpdatedEvent,
   PersonalSavingsUpdated as PersonalSavingsUpdatedEvent,
   RelayerStatusUpdated as RelayerStatusUpdatedEvent,
 } from "../generated/ReferralRewardsProxy/ReferralRewards";
@@ -165,6 +168,30 @@ export function handleCampaignEnded(event: CampaignEndedEvent): void {
   const system = getOrCreateReferralSystem();
   system.campaignMode = false;
   system.save();
+}
+
+export function handleReferralRewardsEnabledUpdated(
+  event: ReferralRewardsEnabledUpdatedEvent,
+): void {
+  const system = getOrCreateReferralSystem();
+  system.rewardsEnabled = event.params.enabled;
+  system.save();
+}
+
+export function handleReferralBonusUpdated(
+  event: ReferralBonusUpdatedEvent,
+): void {
+  const settings = getOrCreateReferralTokenSettings(event.params.token);
+  settings.bonusAmount = event.params.amount;
+  settings.save();
+}
+
+export function handleTokenSupportUpdated(
+  event: TokenSupportUpdatedEvent,
+): void {
+  const settings = getOrCreateReferralTokenSettings(event.params.token);
+  settings.isSupported = event.params.status;
+  settings.save();
 }
 
 export function handlePersonalSavingsUpdated(

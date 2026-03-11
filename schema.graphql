@@ -89,6 +89,7 @@ type ReferralTokenSettings @entity(immutable: false) {
   id: Bytes! # token address
   system: ReferralSystem!
   token: Bytes!
+  isSupported: Boolean!
   bonusAmount: BigInt!
   campaignBonusAmount: BigInt!
   totalRewardsPaid: BigInt!
