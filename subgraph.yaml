@@ -8,9 +8,9 @@ dataSources:
     name: ReferralRewardsProxy
     network: fuji
     source:
-      address: "0x4c252089abA090FF4306c899FD07ac6A21a56e7e"
+      address: "0x075E2dC963cE97E4D7B365CcE8473286E3C5f545"
       abi: ReferralRewards
-      startBlock: 52605215
+      startBlock: 52607753
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
