@@ -40,7 +40,6 @@ import {
   TokenAdded,
   TokenRemoved,
 } from "../generated/schema";
-import { CircleSavings } from "../generated/CircleSavingsProxy/CircleSavings";
 import { createTransaction, getOrCreateUser } from "./utils";
 
 export function handleCircleCreated(event: CircleCreatedEvent): void {
@@ -156,7 +155,12 @@ export function handlePayoutDistributed(event: PayoutDistributedEvent): void {
   // Increment the circle's currentRound
   const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
   const circle = Circle.load(circleId);
+  
   if (circle) {
+    payoutDistributed.fee = circle.totalPot.gt(event.params.amount)
+      ? circle.totalPot.minus(event.params.amount)
+      : BigInt.fromI32(0);
+
     // The contract increments round after payout ONLY if round < totalRounds (maxMembers)
     // If round == totalRounds, the circle is completed.
     if (event.params.round.lt(circle.maxMembers)) {
@@ -173,6 +177,8 @@ export function handlePayoutDistributed(event: PayoutDistributedEvent): void {
     circle.contributionsThisRound = BigInt.fromI32(0);
     circle.updatedAt = event.block.timestamp;
     circle.save();
+  } else {
+    payoutDistributed.fee = BigInt.fromI32(0);
   }
 
   payoutDistributed.save();
@@ -187,7 +193,7 @@ export function handlePositionAssigned(event: PositionAssignedEvent): void {
     .concatI32(event.logIndex.toI32())
     .concat(event.params.member);
 
-  const positionAssigned = new PositionAssigned(id); // ✅ UNIQUE ID
+  const positionAssigned = new PositionAssigned(id); // UNIQUE ID
   positionAssigned.user = user.id;
   positionAssigned.circleId = event.params.circleId;
   positionAssigned.position = event.params.position;
@@ -213,7 +219,6 @@ export function handleCollateralWithdrawn(
   const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
   const circle = Circle.load(circleId);
   if (circle) {
-    circle.state = 5; // DEAD
     circle.updatedAt = event.block.timestamp;
     circle.save();
   }
@@ -282,16 +287,10 @@ export function handleVoteExecuted(event: VoteExecutedEvent): void {
   voteExecuted.withdrawVoteTotal = event.params.withdrawVoteCount;
   voteExecuted.transaction = transaction.id;
 
-  // Calculate if withdraw won
-  const totalVotes = event.params.startVoteCount.plus(
-    event.params.withdrawVoteCount,
+  // Calculate if withdraw won (matches contract logic: withdraw > start)
+  const withdrawWon = event.params.withdrawVoteCount.gt(
+    event.params.startVoteCount,
   );
-  const withdrawWon = totalVotes.gt(BigInt.fromI32(0))
-    ? event.params.startVoteCount
-        .times(BigInt.fromI32(10000))
-        .div(totalVotes)
-        .lt(BigInt.fromI32(5100))
-    : false;
 
   voteExecuted.withdrawWon = withdrawWon;
 
@@ -299,7 +298,9 @@ export function handleVoteExecuted(event: VoteExecutedEvent): void {
   const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
   const circle = Circle.load(circleId);
   if (circle) {
-    circle.state = 1; // Back to CREATED after vote execution
+    // If circleStarted is true, the circle is now ACTIVE (3)
+    // If circleStarted is false, the circle is now DEAD (5)
+    circle.state = event.params.circleStarted ? 3 : 5;
     circle.updatedAt = event.block.timestamp;
 
     // Store vote result
@@ -348,15 +349,13 @@ export function handleMemberForfeited(event: MemberForfeitedEvent): void {
     .concatI32(event.logIndex.toI32())
     .concat(event.params.member);
 
-  const memberForfeited = new MemberForfeited(id); // ✅ UNIQUE ID
+  const memberForfeited = new MemberForfeited(id); // UNIQUE ID
   memberForfeited.forfeiter = user.id;
   memberForfeited.circleId = event.params.circleId;
   memberForfeited.round = event.params.round;
   memberForfeited.deductionAmount = event.params.deduction;
   memberForfeited.forfeitedUser = event.params.member;
   memberForfeited.transaction = transaction.id;
-
-  memberForfeited.save();
 
   const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
   const circle = Circle.load(circleId);
@@ -365,13 +364,23 @@ export function handleMemberForfeited(event: MemberForfeitedEvent): void {
       ? circle.contributionAmount
       : event.params.deduction;
 
+    const toFee = event.params.deduction.minus(toPot);
+
+    memberForfeited.potAmount = toPot;
+    memberForfeited.feeAmount = toFee;
+
     circle.totalPot = circle.totalPot.plus(toPot);
     circle.contributionsThisRound = circle.contributionsThisRound.plus(
       BigInt.fromI32(1),
     );
     circle.updatedAt = event.block.timestamp;
     circle.save();
+  } else {
+    memberForfeited.potAmount = BigInt.fromI32(0);
+    memberForfeited.feeAmount = BigInt.fromI32(0);
   }
+
+  memberForfeited.save();
 }
 
 export function handleVisibilityUpdated(event: VisibilityUpdatedEvent): void {
@@ -403,7 +412,7 @@ export function handleCollateralReturned(event: CollateralReturnedEvent): void {
     .concatI32(event.logIndex.toI32())
     .concat(event.params.member);
 
-  const collateralReturned = new CollateralReturned(id); // ✅ UNIQUE ID
+  const collateralReturned = new CollateralReturned(id); // UNIQUE ID
   collateralReturned.user = user.id;
   collateralReturned.circleId = event.params.circleId;
   collateralReturned.amount = event.params.amount;
@@ -428,6 +437,17 @@ export function handleDeadCircleFeeDeducted(
   deadCircleFeeDeducted.transaction = transaction.id;
 
   deadCircleFeeDeducted.save();
+
+  // Update the mutable Circle entity to DEAD state
+  const circleId = changetype<Bytes>(Bytes.fromBigInt(event.params.circleId));
+  const circle = Circle.load(circleId);
+  if (circle) {
+    if (circle.state != 4) {
+      circle.state = 5; // DEAD (unless already COMPLETED)
+    }
+    circle.updatedAt = event.block.timestamp;
+    circle.save();
+  }
 }
 
 export function handleLateContributionMade(
@@ -460,7 +480,6 @@ export function handleLateContributionMade(
 }
 
 // Obsolete yield handlers removed
-
 export function handleTokenAdded(event: TokenAddedEvent): void {
   const transaction = createTransaction(event);
   const id = event.transaction.hash.concatI32(event.logIndex.toI32());

@@ -316,6 +316,8 @@ type MemberForfeited @entity(immutable: true) {
   circleId: BigInt! # uint256
   round: BigInt! # uint256
   deductionAmount: BigInt! # uint256
+  potAmount: BigInt! # uint256
+  feeAmount: BigInt! # uint256
   forfeitedUser: User!
   transaction: Transaction!
 }
@@ -358,6 +360,7 @@ type PayoutDistributed @entity(immutable: true) {
   circleId: BigInt! # uint256
   round: BigInt! # uint256
   payoutAmount: BigInt! # uint256
+  fee: BigInt! # uint256
   token: Bytes! # address
   nextRoundDeadline: BigInt! # uint256
   transaction: Transaction!
